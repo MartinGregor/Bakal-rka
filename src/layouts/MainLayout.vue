@@ -1,116 +1,102 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+  <q-layout view="hHh LpR lFr">
+
+    <q-header elevated class="bg-primary text-white">
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+        <q-btn dense flat round icon="menu" @click="toggleLeftDrawer" />
 
         <q-toolbar-title>
-          Quasar App
+          <q-avatar>
+            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
+          </q-avatar>
+          MIPS Simulator
         </q-toolbar-title>
 
-        <div>Quasar v{{ $q.version }}</div>
+        <q-btn dense flat round icon="menu" @click="toggleRightDrawer" />
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
+    <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
+      <div class="q-pa-md q-gutter-md full-width" >
+        <q-btn class="col" color="primary" label="Instructions Set"/>
+        <q-btn class="col" push color="red" label="" icon="refresh">
+          <q-popup-proxy>
+            <q-banner class="q-pa-md">
+              <div class="row items-center no-wrap">
+                <q-icon name="warning" color="red" class="q-mr-md" size="sm"/>
+                <span class="text">Delete all instructions?</span>
+              </div>
+              <q-separator class="q-my-sm" />
+              <div class="row justify-end q-gutter-sm">
+                <q-btn flat color="red" label="Yes" icon="delete" />
+                <q-btn flat color="primary" label="No" icon="close" />
+              </div>
+            </q-banner>
+          </q-popup-proxy>
+        </q-btn>
+      </div>
 
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
+      <div class="q-pa-md">
+        <div class="column" style="max-width: 300px">
+          <div v-for="(instruction, index) in instructions" :key="index"
+               class="row items-center"
+               :style="{ marginBottom: space ? '5px' : '0px' }">
+            <span class="q-mr-md" style="width: 10px; text-align: right;">{{ index }}</span>
+            <q-input filled v-model="instructions[index]" dense class="col" />
+          </div>
+        </div>
+      </div>
+    </q-drawer>
+
+
+    <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
+      <div class="q-pa-md">
+        <div class="column" style="max-width: 300px">
+          <div v-for="(register, index) in registers" :key="index"
+               class="row items-center"
+               :style="{ marginBottom: space ? '5px' : '0px' }">
+            <span class="q-mr-md" style="width: 10px; text-align: left;">{{ "R"+index }}</span>
+            <q-input filled v-model="registers[index]" dense class="col" />
+          </div>
+        </div>
+      </div>
     </q-drawer>
 
     <q-page-container>
       <router-view />
     </q-page-container>
+
   </q-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import EssentialLink, { type EssentialLinkProps } from 'components/EssentialLink.vue';
+import {ref} from 'vue'
 
-const linksList: EssentialLinkProps[] = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-];
-
-export default defineComponent({
-  name: 'MainLayout',
-
-  components: {
-    EssentialLink
-  },
-
-  setup () {
+export default {
+  setup() {
     const leftDrawerOpen = ref(false);
+    const rightDrawerOpen = ref(false);
+    const instructions = ref(new Array(300).fill('NOP'));
+    const registers = ref(new Array(32).fill(0));
+    const data = ref(new Array(240).fill(0));
 
     return {
-      linksList,
       leftDrawerOpen,
-      toggleLeftDrawer () {
-        leftDrawerOpen.value = !leftDrawerOpen.value;
-      }
-    };
+      toggleLeftDrawer() {
+        leftDrawerOpen.value = !leftDrawerOpen.value
+      },
+
+      rightDrawerOpen,
+      toggleRightDrawer() {
+        rightDrawerOpen.value = !rightDrawerOpen.value
+      },
+      text: ref(''),
+      ph: ref(''),
+      space: ref(true),
+      instructions,
+      registers,
+      data
+    }
   }
-});
+}
 </script>
