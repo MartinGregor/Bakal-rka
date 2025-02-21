@@ -78,7 +78,7 @@ export default {
     const rightDrawerOpen = ref(false);
     const instructions = ref(new Array(300).fill('NOP'));
     const registers = ref(new Array(32).fill(0));
-    const data = ref(new Array(240).fill(0));
+    const data = ref(new Array(300).fill(0));
 
     return {
       leftDrawerOpen,
