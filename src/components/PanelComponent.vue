@@ -4,7 +4,7 @@
       <TimeComponent />
       <ImportExportComponent />
     </div>
-    <h2>Panel Component</h2>
+    <IIEMWComponent />
   </div>
 </template>
 
@@ -12,12 +12,14 @@
 import { defineComponent } from 'vue';
 import ImportExportComponent from 'components/ImportExportComponent.vue';
 import TimeComponent from 'components/TimeComponent.vue';
+import IIEMWComponent from "components/IIEMWComponent.vue";
 
 export default defineComponent({
   name: 'PanelComponent',
   components: {
     ImportExportComponent,
     TimeComponent,
+    IIEMWComponent,
   }
 });
 </script>
