@@ -1,10 +1,10 @@
 <template>
   <div class="input-container">
-    <q-input outlined v-model="text1" :dense="dense" hint="FETCH PHASE" readonly />
-    <q-input outlined v-model="text2" :dense="dense" hint="DECODE PHASE" readonly />
-    <q-input outlined v-model="text3" :dense="dense" hint="EXECUTE PHASE" readonly />
-    <q-input outlined v-model="text4" :dense="dense" hint="MEMORY ACCESS PHASE" readonly />
-    <q-input outlined v-model="text5" :dense="dense" hint="WRITE BACK PHASE" readonly />
+    <q-input outlined v-model="text1" :dense="dense" label="FETCH PHASE" readonly />
+    <q-input outlined v-model="text2" :dense="dense" label="DECODE PHASE" readonly />
+    <q-input outlined v-model="text3" :dense="dense" label="EXECUTE PHASE" readonly />
+    <q-input outlined v-model="text4" :dense="dense" label="MEMORY ACCESS PHASE" readonly />
+    <q-input outlined v-model="text5" :dense="dense" label="WRITE BACK PHASE" readonly />
   </div>
 </template>
 

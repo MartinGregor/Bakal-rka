@@ -1,47 +1,71 @@
 <template>
   <div class="q-pa-md">
     <div class="q-gutter-md row items-center">
+      <!-- Reset Button -->
+      <q-btn round color="red" text-color="white" icon="insert_drive_file" @click="resetAll">
+        <q-tooltip anchor="top middle" self="bottom middle" class="bg-red text-body2 text-white" :offset="[10, 10]">
+          New
+        </q-tooltip>
+      </q-btn>
+
       <!-- Export Button -->
       <q-btn round color="white" text-color="blue" icon="file_download" @click="exportJson">
         <q-tooltip anchor="top middle" self="bottom middle" class="bg-primary text-body2 text-white" :offset="[10, 10]">
           Export
         </q-tooltip>
       </q-btn>
+
+      <!-- Import Button (Triggers File Input) -->
+      <q-btn round color="white" text-color="green" icon="file_upload" @click="triggerFileInput">
+        <q-tooltip anchor="top middle" self="bottom middle" class="bg-primary text-body2 text-white" :offset="[10, 10]">
+          Import
+        </q-tooltip>
+      </q-btn>
+
+      <!-- Hidden File Input -->
+      <input type="file" ref="fileInput" accept=".json" @change="handleFileUpload" style="display: none;" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useMipsStore } from 'stores/mipsStore';
 
 export default defineComponent({
   name: 'ImportExportComponent',
   setup() {
     const mipsStore = useMipsStore();
+    const fileInput = ref<HTMLInputElement | null>(null);
 
-    // Export JSON file with registers, data, and instructions
-    const exportJson = () => {
-      const jsonData = {
-        registers: mipsStore.registers,
-        data: mipsStore.data,
-        instructions: mipsStore.instructions
-      };
+    // Function to reset all arrays
+    const resetAll = () => {
+      mipsStore.resetData();
+    };
 
-      const jsonString = JSON.stringify(jsonData, null, 2);
-      const blob = new Blob([jsonString], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "exported_data.json";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+    // Trigger file input
+    const triggerFileInput = () => {
+      if (fileInput.value) {
+        fileInput.value.click();
+      }
+    };
+
+    // Handle file upload and import JSON
+    const handleFileUpload = (event: Event) => {
+      const target = event.target as HTMLInputElement;
+      const file = target.files?.[0];
+
+      if (file) {
+        mipsStore.importJson(file);
+      }
     };
 
     return {
-      exportJson
+      exportJson: mipsStore.exportJson,
+      triggerFileInput,
+      handleFileUpload,
+      fileInput,
+      resetAll,
     };
   }
 });

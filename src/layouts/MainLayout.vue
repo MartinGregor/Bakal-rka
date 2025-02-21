@@ -18,7 +18,7 @@
 
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
       <div class="q-pa-md" style="display: flex; flex-direction: column; height: 100%;">
-        <q-banner class="bg-primary text-white" style="border-radius: 10px; margin-bottom: 5px;">
+        <q-banner class="bg-primary text-white" style="border-radius: 10px; margin-bottom: 5px; text-align: center;">
           <span class="text-h6">Instructions</span>
         </q-banner>
 
@@ -41,7 +41,7 @@
     <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
       <div class="q-pa-md" style="display: flex; flex-direction: column; height: 100%;">
 
-        <q-banner class="bg-primary text-white" style="border-radius: 10px; margin-bottom: 5px; text-align: left; padding-left: 10px;">
+        <q-banner class="bg-primary text-white" style="border-radius: 10px; margin-bottom: 5px; text-align: center; padding-left: 10px;">
           <span class="text-h6">Registers</span>
         </q-banner>
 
@@ -60,7 +60,7 @@
         <!-- Separator between the two scroll areas -->
         <q-separator class="q-my-md" />
 
-        <q-banner class="bg-primary text-white" style="border-radius: 10px; margin-bottom: 5px; text-align: left; padding-left: 10px;">
+        <q-banner class="bg-primary text-white" style="border-radius: 10px; margin-bottom: 5px; text-align: left; padding-left: 10px; text-align: center;">
           <span class="text-h6">Data</span>
         </q-banner>
 
@@ -89,34 +89,42 @@
 </template>
 
 <script lang="ts">
-import {ref} from 'vue'
+import { ref } from 'vue';
+import { useMipsStore } from 'stores/mipsStore';
 
 export default {
   setup() {
+    const mipsStore = useMipsStore();
+
     const leftDrawerOpen = ref(false);
     const rightDrawerOpen = ref(false);
-    const instructions = ref(new Array(300).fill('NOP'));
-    const registers = ref(new Array(32).fill(0));
-    const data = ref(new Array(300).fill(0));
+    const space = ref(true);
+    const visible = ref(false);
+
+    // Now accessing data directly from mipsStore
+    const instructions = mipsStore.instructions;
+    const registers = mipsStore.registers;
+    const data = mipsStore.data;
+
+    const toggleLeftDrawer = () => {
+      leftDrawerOpen.value = !leftDrawerOpen.value;
+    };
+
+    const toggleRightDrawer = () => {
+      rightDrawerOpen.value = !rightDrawerOpen.value;
+    };
 
     return {
       leftDrawerOpen,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value
-      },
-
+      toggleLeftDrawer,
       rightDrawerOpen,
-      toggleRightDrawer() {
-        rightDrawerOpen.value = !rightDrawerOpen.value
-      },
-      text: ref(''),
-      ph: ref(''),
-      space: ref(true),
-      visible: ref(false),
+      toggleRightDrawer,
+      space,
+      visible,
       instructions,
       registers,
       data
-    }
+    };
   }
-}
+};
 </script>
