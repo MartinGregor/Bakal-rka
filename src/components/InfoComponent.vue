@@ -78,7 +78,8 @@ export default defineComponent({
         ["NOP", "No Operation", "NOP", "This instruction does nothing and is used as a placeholder."],
         ["SLLV", "Shift Left Logical Variable", "SLLV $R1 $R2 $R3", "This instruction shifts the value in rt left by the amount specified in rs and stores the result in rd."],
         ["SRLV", "Shift Right Logical Variable", "SRLV $R1 $R2 $R3", "This instruction shifts the value in rt right by the amount specified in rs and stores the result in rd."],
-        ["J", "JUMP", "J ", "This instruction jump on rt"],
+        ["J", "JUMP", "J $rt", "This instruction jump on rt"],
+        ["JI", "JUMP Immediate", "JI 5 ", "This instruction jump on 5"],
         ["Q", "QUIT", "Q", "This instruction terminate the running program"]
       ],
       selectedInstructionIndex: 0,

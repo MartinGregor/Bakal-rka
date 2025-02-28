@@ -1,6 +1,7 @@
 // stores/mipsStore.ts
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { useProgramManagementStore } from 'stores/program_management';
 
 export const useMipsStore = defineStore('mipsStore', () => {
   // Arrays to store the instructions, registers, and data
@@ -57,10 +58,35 @@ export const useMipsStore = defineStore('mipsStore', () => {
     reader.readAsText(file);
   };
 
+  // New project blank
   const resetData = () => {
     instructions.value.splice(0, instructions.value.length, ...new Array(300).fill('NOP'));
     registers.value.splice(0, registers.value.length, ...new Array(32).fill(0));
     data.value.splice(0, data.value.length, ...new Array(300).fill(0));
+
+    programManagementStore.resetPipelinePhases();
+
+    pc.value = 0;
+  };
+
+  const resetProgress = () => {
+
+    programManagementStore.resetPipelinePhases();
+    pc.value = 0;
+  };
+
+
+  //IIEMW Phase
+  const programManagementStore = useProgramManagementStore();
+  const pc = ref(0);
+  const getCurrentInstruction = () => instructions.value[pc.value] || "NOP";
+
+  const getRegisterValue = (registerIndex: number) => {
+    if (registerIndex < 0 || registerIndex >= registers.value.length) {
+      console.error("Invalid register index:", registerIndex);
+      return 0;  // Return a default value in case of invalid index
+    }
+    return registers.value[registerIndex];
   };
 
   return {
@@ -69,6 +95,10 @@ export const useMipsStore = defineStore('mipsStore', () => {
     data,
     exportJson,
     importJson,
-    resetData
+    resetData,
+    resetProgress,
+    getCurrentInstruction,
+    getRegisterValue,
+    pc
   };
 });
