@@ -8,8 +8,9 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
   const executePhase = ref("");
   const memoryAccessPhase = ref("");
   const writeBackPhase = ref("");
-
   const instruction_data = ref(Array(20).fill(""));
+
+  const mipsStore = useMipsStore();
 
   const resetPipelinePhases = () => {
     fetchPhase.value = "";
@@ -17,12 +18,9 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
     executePhase.value = "";
     memoryAccessPhase.value = "";
     writeBackPhase.value = "";
+
+    instruction_data.value.splice(0, instruction_data.value.length, ...new Array(20).fill(""));
   };
-
-
-
-
-  const mipsStore = useMipsStore();
 
   function skipInstruction() {
     writeBackPhase.value = memoryAccessPhase.value;
@@ -31,8 +29,11 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
     decodePhase.value = fetchPhase.value;
     fetchPhase.value = mipsStore.getCurrentInstruction();
 
-    if (fetchPhase.value !== 'NOP' && fetchPhase.value !== "")
+    if (fetchPhase.value !== "")
     {
+      Write()
+      Memory()
+      Execute()
       Decode()
       Fetch()
     }
@@ -52,6 +53,12 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
     const parts = fetchPhase.value.split(" ");
     const instruction = parts[0];
 
+    if (fetchPhase.value == "NOP" || fetchPhase.value == "")
+    {
+      instruction_data.value[0] = "NOP"
+      return;
+    }
+
     switch (instruction)
     {
       case "ADD":
@@ -70,7 +77,6 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
             instruction_data.value[1] = parts[1]
             instruction_data.value[2] = parts[2]
             instruction_data.value[3] = parts[3]
-            console.log("Valid");
           }
           else
           {
@@ -114,32 +120,105 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
         case "DIV":
         case "MULU":
         case "DIVU":
-          instruction_data.value[5] = mipsStore.getRegisterValue(parseInt(instruction_data.value[5].replace('$R', '')));
           instruction_data.value[6] = mipsStore.getRegisterValue(parseInt(instruction_data.value[6].replace('$R', '')));
           instruction_data.value[7] = mipsStore.getRegisterValue(parseInt(instruction_data.value[7].replace('$R', '')));
-
-          console.log(`Fetching values for registers:`);
-          console.log(`Register ${instruction_data.value[5]} `);
-          console.log(`Register ${instruction_data.value[6]} `);
-          console.log(`Register ${instruction_data.value[7]} `);
           break;
+      }
+    }
+  }
+
+  function Execute() {
+    if (instruction_data.value[4] == "NOP" || instruction_data.value[4] == "")
+    {
+      instruction_data.value[8] = "NOP"
+      return;
+    }
+    else
+    {
+      instruction_data.value[8] = instruction_data.value[4]
+      instruction_data.value[9] = instruction_data.value[5]
+      instruction_data.value[10] = instruction_data.value[6]
+      instruction_data.value[11] = instruction_data.value[7]
+      switch (instruction_data.value[8])
+      {
+        case "ADD":
+          instruction_data.value[10] = Number(instruction_data.value[10]) + Number(instruction_data.value[11]);
+          instruction_data.value[11] = 0;
+          console.log(instruction_data.value[10]);
+          break;
+        case "SUB":
+          instruction_data.value[10] = instruction_data.value[10] - instruction_data.value[11];
+          instruction_data.value[11] = 0;
+          console.log(instruction_data.value[10]);
+          break;
+        case "MUL":
+          instruction_data.value[10] = Math.trunc(Number(instruction_data.value[10]) * Number(instruction_data.value[11]));
+          instruction_data.value[11] = 0;
+          console.log(instruction_data.value[10]);
+          break;
+        case "DIV":
+          instruction_data.value[10] = Math.trunc(Number(instruction_data.value[10]) / Number(instruction_data.value[11]));
+          instruction_data.value[11] = 0;
+          console.log(instruction_data.value[10]);
+          break;
+        case "MULU":
+        case "DIVU":
+
+
 
       }
     }
   }
 
-  function Execute()
-  {
+  function Memory() {
+    if (instruction_data.value[8] == "NOP" || instruction_data.value[8] == "")
+    {
+      instruction_data.value[12] = "NOP"
+      return;
+    }
+    else
+    {
+      switch (instruction_data.value[8])
+      {
+        case "ADD":
+        case "SUB":
+        case "MUL":
+        case "DIV":
+        case "MULU":
+        case "DIVU":
+          instruction_data.value[12] = instruction_data.value[8];
+          instruction_data.value[13] = instruction_data.value[9];
+          instruction_data.value[14] = instruction_data.value[10];
+          instruction_data.value[15] = instruction_data.value[11];
+          break;
+
+      }
+    }
+
 
   }
 
-  function Memory()
-  {
+  function Write() {
+    if (instruction_data.value[12] == "NOP" || instruction_data.value[12] == "")
+    {
+      return;
+    }
+    else
+    {
+      switch (instruction_data.value[12])
+      {
+        case "ADD":
+        case "SUB":
+        case "MUL":
+        case "DIV":
+        case "MULU":
+        case "DIVU":
+          instruction_data.value[13] = parseInt(instruction_data.value[13].replace('$R', ''));
+          mipsStore.setRegisterValue(instruction_data.value[13],instruction_data.value[14])
+          break;
 
-  }
-
-  function Write()
-  {
+      }
+    }
 
   }
 
@@ -158,12 +237,6 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
     writeBackPhase,
     skipInstruction,
     resetPipelinePhases,
-    Execute,
-    Decode,
-    Fetch,
-    Write,
-    Memory,
-    ValidRegister,
     instruction_data,
   };
 });

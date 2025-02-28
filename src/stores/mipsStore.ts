@@ -70,7 +70,6 @@ export const useMipsStore = defineStore('mipsStore', () => {
   };
 
   const resetProgress = () => {
-
     programManagementStore.resetPipelinePhases();
     pc.value = 0;
   };
@@ -84,9 +83,17 @@ export const useMipsStore = defineStore('mipsStore', () => {
   const getRegisterValue = (registerIndex: number) => {
     if (registerIndex < 0 || registerIndex >= registers.value.length) {
       console.error("Invalid register index:", registerIndex);
-      return 0;  // Return a default value in case of invalid index
+      return 0;
     }
     return registers.value[registerIndex];
+  };
+
+  const setRegisterValue = (registerIndex: number, value: number) => {
+    if (registerIndex < 0 || registerIndex >= registers.value.length) {
+      console.error("Invalid register index:", registerIndex);
+      return;
+    }
+    registers.value[registerIndex] = value;
   };
 
   return {
@@ -99,6 +106,7 @@ export const useMipsStore = defineStore('mipsStore', () => {
     resetProgress,
     getCurrentInstruction,
     getRegisterValue,
+    setRegisterValue,
     pc
   };
 });
