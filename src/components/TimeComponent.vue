@@ -12,20 +12,26 @@
       </q-tooltip>
     </q-btn>
 
-    <q-btn round color="primary" text-color="white" icon="skip_next" @click="skipAndNotify">
-      <q-tooltip anchor="top middle" self="bottom middle" class="bg-primary text-body2 text-white" :offset="[10, 10]">
-        Skip
-      </q-tooltip>
-    </q-btn>
-
     <q-btn round color="primary" icon="fast_forward" @click="fastAndNotify">
       <q-tooltip anchor="top middle" self="bottom middle" class="bg-primary text-body2 text-white" :offset="[10, 10]">
         Fast
       </q-tooltip>
     </q-btn>
 
-    <q-btn round color="white" text-color="red" icon="replay" @click="resetAndNotify">
+    <q-btn round color="primary" text-color="white" icon="skip_next" @click="skipAndNotify">
       <q-tooltip anchor="top middle" self="bottom middle" class="bg-primary text-body2 text-white" :offset="[10, 10]">
+        Skip
+      </q-tooltip>
+    </q-btn>
+
+    <q-btn round color="primary" text-color="white" icon="speed" @click="instantAndNotify">
+      <q-tooltip anchor="top middle" self="bottom middle" class="bg-primary text-body2 text-white" :offset="[10, 10]">
+        Instant
+      </q-tooltip>
+    </q-btn>
+
+    <q-btn round color="white" text-color="green" icon="replay" @click="resetAndNotify">
+      <q-tooltip anchor="top middle" self="bottom middle" class="bg-green text-body2 text-white" :offset="[10, 10]">
         Reset
       </q-tooltip>
     </q-btn>
@@ -42,7 +48,7 @@ export default defineComponent({
   name: 'TimeComponent',
   setup() {
     const $q = useQuasar();
-    const store = useProgramManagementStore();
+    const pms = useProgramManagementStore();
     const mips = useMipsStore();
 
     const notifyPause = () => {
@@ -75,9 +81,10 @@ export default defineComponent({
     const notifyReset = () => {
       $q.notify({
         message: 'Reset',
-        color: 'red',
+        color: 'white',
         position: 'bottom',
-        timeout: 2000
+        timeout: 2000,
+        textColor: 'red',
       });
     };
 
@@ -90,26 +97,44 @@ export default defineComponent({
       });
     };
 
+    const notifyInstant = () => {
+      $q.notify({
+        message: 'Instant',
+        color: 'primary',
+        position: 'bottom',
+        timeout: 2000
+      });
+    };
+
     const skipAndNotify = () => {
-      store.skipInstruction();
+      pms.skipInstruction();
       notifySkip();
     };
 
     const playAndNotify = () => {
+      pms.play();
       notifyPlay();
     };
 
     const pauseAndNotify = () => {
+      pms.pause();
       notifyPause();
     };
 
     const fastAndNotify = () => {
       notifyFast();
+      pms.playfast();
     };
 
     const resetAndNotify = () => {
       notifyReset();
-      mips.resetProgress()
+      pms.pause();
+      mips.resetProgress();
+    };
+
+    const instantAndNotify = () => {
+      notifyInstant();
+      pms.playinstant();
     };
 
     return {
@@ -118,6 +143,7 @@ export default defineComponent({
       fastAndNotify,
       pauseAndNotify,
       playAndNotify,
+      instantAndNotify
     };
   }
 });

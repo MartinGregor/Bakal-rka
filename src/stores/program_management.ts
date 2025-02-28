@@ -22,6 +22,30 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
     instruction_data.value.splice(0, instruction_data.value.length, ...new Array(20).fill(""));
   };
 
+  let playInterval: ReturnType<typeof setInterval> | null = null;
+
+  function play(): void {
+    pause();
+    playInterval = setInterval(skipInstruction, 500);
+  }
+
+  function playfast(): void {
+    pause();
+    playInterval = setInterval(skipInstruction, 100);
+  }
+
+  function playinstant(): void {
+    pause();
+    playInterval = setInterval(skipInstruction, 1);
+  }
+
+  function pause(): void {
+    if (playInterval !== null) {
+      clearInterval(playInterval);
+      playInterval = null;
+    }
+  }
+
   function skipInstruction() {
     writeBackPhase.value = memoryAccessPhase.value;
     memoryAccessPhase.value = executePhase.value;
@@ -61,35 +85,34 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
 
     switch (instruction)
     {
-      case "ADD":
-      case "SUB":
-      case "MUL":
-      case "DIV":
-      case "MULU":
-      case "DIVU":
-        if (parts.length == 4)
-        {
-          if (parts[1] !== undefined && ValidRegister(parts[1]) &&
-            parts[2] !== undefined && ValidRegister(parts[2]) &&
-            parts[3] !== undefined && ValidRegister(parts[3]))
-          {
-            instruction_data.value[0] = instruction
-            instruction_data.value[1] = parts[1]
-            instruction_data.value[2] = parts[2]
-            instruction_data.value[3] = parts[3]
-          }
-          else
-          {
-            console.log("Invalid Registers - Replaced for NOP");
-            instruction_data.value[0] = "NOP"
-          }
-        }
-        else
-        {
-          console.log("Invalid Syntax - Replaced for NOP");
-          instruction_data.value[0] = "NOP"
-        }
-        break;
+      case "ADD": case "SUB": case "MUL": case "DIV":
+      case "ADDI": case "SUBI": case "MULI": case "DIVI":
+      if (
+        parts.length === 4 &&
+        parts[1] !== undefined && ValidRegister(parts[1]) &&
+        parts[2] !== undefined && ValidRegister(parts[2]) &&
+        parts[3] !== undefined && (instruction.endsWith("I") ? ValidNumber(parts[3]) : ValidRegister(parts[3]))
+      ) {[instruction_data.value[0], instruction_data.value[1], instruction_data.value[2], instruction_data.value[3]] = parts;}
+      else {
+        console.log("Invalid " + (parts.length !== 4 ? "Syntax" : "Registers") + " - Replaced for NOP");
+        instruction_data.value[0] = "NOP";
+      }
+      break;
+      case "BEQ": case "BNEQ":
+      if (parts.length === 4 && parts[1] !== undefined && ValidRegister(parts[1]) && parts[2] !== undefined
+        && ValidRegister(parts[2]) && parts[3] !== undefined && ValidInstructionNumber(parts[3]))
+      {[instruction_data.value[0], instruction_data.value[1], instruction_data.value[2], instruction_data.value[3]] = parts;}
+      else {
+        console.log(
+          "Invalid " +
+          (parts.length !== 4 ? "Syntax" :
+            (parts[1] === undefined || !ValidRegister(parts[1]) ? "Registers" :
+              (parts[2] === undefined || !ValidRegister(parts[2]) ? "Registers" :
+                (parts[3] === undefined || !ValidInstructionNumber(parts[3]) ? "Instruction Number" : "")))) +
+          " - Replaced for NOP");
+        instruction_data.value[0] = "NOP";
+      }
+      break;
 
       default:
         console.log("Unknown Instruction - Replaced for NOP");
@@ -114,15 +137,17 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
       instruction_data.value[7] = instruction_data.value[3]
       switch (instruction_data.value[4])
       {
-        case "ADD":
-        case "SUB":
-        case "MUL":
-        case "DIV":
-        case "MULU":
-        case "DIVU":
+        case "ADD": case "SUB": case "MUL": case "DIV":
           instruction_data.value[6] = mipsStore.getRegisterValue(parseInt(instruction_data.value[6].replace('$R', '')));
           instruction_data.value[7] = mipsStore.getRegisterValue(parseInt(instruction_data.value[7].replace('$R', '')));
           break;
+        case "ADDI": case "SUBI": case "MULI": case "DIVI":
+          instruction_data.value[6] = mipsStore.getRegisterValue(parseInt(instruction_data.value[6].replace('$R', '')));
+          instruction_data.value[7] = parseInt(instruction_data.value[7].replace('$', ''));
+          break;
+        case "BEQ": case "BNEQ":
+          instruction_data.value[5] = mipsStore.getRegisterValue(parseInt(instruction_data.value[5].replace('$R', '')));
+          instruction_data.value[6] = mipsStore.getRegisterValue(parseInt(instruction_data.value[6].replace('$R', '')));
       }
     }
   }
@@ -141,29 +166,36 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
       instruction_data.value[11] = instruction_data.value[7]
       switch (instruction_data.value[8])
       {
-        case "ADD":
+        case "ADD": case "ADDI":
           instruction_data.value[10] = Number(instruction_data.value[10]) + Number(instruction_data.value[11]);
           instruction_data.value[11] = 0;
-          console.log(instruction_data.value[10]);
           break;
-        case "SUB":
+        case "SUB": case "SUBI":
           instruction_data.value[10] = instruction_data.value[10] - instruction_data.value[11];
           instruction_data.value[11] = 0;
-          console.log(instruction_data.value[10]);
           break;
-        case "MUL":
+        case "MUL": case "MULI":
           instruction_data.value[10] = Math.trunc(Number(instruction_data.value[10]) * Number(instruction_data.value[11]));
           instruction_data.value[11] = 0;
-          console.log(instruction_data.value[10]);
           break;
-        case "DIV":
+        case "DIV": case "DIVI":
           instruction_data.value[10] = Math.trunc(Number(instruction_data.value[10]) / Number(instruction_data.value[11]));
           instruction_data.value[11] = 0;
-          console.log(instruction_data.value[10]);
           break;
-        case "MULU":
-        case "DIVU":
-
+        case "BEQ":
+          if(instruction_data.value[9] === instruction_data.value[10])
+          {
+            mipsStore.setPC(parseInt(instruction_data.value[11].replace('$', '')))
+          }
+          instruction_data.value[8] = "NOP"
+          break;
+        case "BNEQ":
+          if(instruction_data.value[9] !== instruction_data.value[10])
+          {
+            mipsStore.setPC(parseInt(instruction_data.value[11].replace('$', '')))
+          }
+          instruction_data.value[8] = "NOP"
+          break;
 
 
       }
@@ -184,8 +216,10 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
         case "SUB":
         case "MUL":
         case "DIV":
-        case "MULU":
-        case "DIVU":
+        case "ADDI":
+        case "SUBI":
+        case "MULI":
+        case "DIVI":
           instruction_data.value[12] = instruction_data.value[8];
           instruction_data.value[13] = instruction_data.value[9];
           instruction_data.value[14] = instruction_data.value[10];
@@ -211,8 +245,10 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
         case "SUB":
         case "MUL":
         case "DIV":
-        case "MULU":
-        case "DIVU":
+        case "ADDI":
+        case "SUBI":
+        case "MULI":
+        case "DIVI":
           instruction_data.value[13] = parseInt(instruction_data.value[13].replace('$R', ''));
           mipsStore.setRegisterValue(instruction_data.value[13],instruction_data.value[14])
           break;
@@ -229,6 +265,20 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
     return registerRegex.test(register);
   }
 
+  function ValidNumber(input: string): boolean {
+    // Regular expression to match numbers like $-45, $45, $+123
+    const numberRegex = /^\$([+-]?\d+)$/;
+
+    return numberRegex.test(input);
+  }
+
+  function ValidInstructionNumber(input: string): boolean {
+    if (!input.startsWith("$")) return false;
+
+    const num = Number(input.slice(1));
+    return !isNaN(num) && num >= 0 && num <= 299;
+  }
+
   return {
     fetchPhase,
     decodePhase,
@@ -238,5 +288,9 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
     skipInstruction,
     resetPipelinePhases,
     instruction_data,
+    play,
+    pause,
+    playinstant,
+    playfast
   };
 });

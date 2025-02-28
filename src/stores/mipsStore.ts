@@ -96,6 +96,14 @@ export const useMipsStore = defineStore('mipsStore', () => {
     registers.value[registerIndex] = value;
   };
 
+  const setPC = (value: number) => {
+    if (value < 0 || value >= instructions.value.length) {
+      console.error("Invalid Instruction index:", value);
+      return;
+    }
+    pc.value = value - 1;
+  };
+
   return {
     instructions,
     registers,
@@ -107,6 +115,7 @@ export const useMipsStore = defineStore('mipsStore', () => {
     getCurrentInstruction,
     getRegisterValue,
     setRegisterValue,
+    setPC,
     pc
   };
 });
