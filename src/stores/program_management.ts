@@ -85,8 +85,8 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
 
     switch (instruction)
     {
-      case "ADD": case "SUB": case "MUL": case "DIV":
-      case "ADDI": case "SUBI": case "MULI": case "DIVI":
+      case "ADD": case "SUB": case "MUL": case "DIV": case "AND": case "OR": case "XOR": case "NAND": case "NOR": case "XNOR":
+      case "ADDI": case "SUBI": case "MULI": case "DIVI": case "ANDI": case "ORI": case "XORI": case "NANDI": case "NORI": case "XNORI":
       if (
         parts.length === 4 &&
         parts[1] !== undefined && ValidRegister(parts[1]) &&
@@ -137,11 +137,11 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
       instruction_data.value[7] = instruction_data.value[3]
       switch (instruction_data.value[4])
       {
-        case "ADD": case "SUB": case "MUL": case "DIV":
+        case "ADD": case "SUB": case "MUL": case "DIV": case "AND": case "OR": case "XOR": case "NAND": case "NOR": case "XNOR":
           instruction_data.value[6] = mipsStore.getRegisterValue(parseInt(instruction_data.value[6].replace('$R', '')));
           instruction_data.value[7] = mipsStore.getRegisterValue(parseInt(instruction_data.value[7].replace('$R', '')));
           break;
-        case "ADDI": case "SUBI": case "MULI": case "DIVI":
+        case "ADDI": case "SUBI": case "MULI": case "DIVI": case "ANDI": case "ORI": case "XORI": case "NANDI": case "NORI": case "XNORI":
           instruction_data.value[6] = mipsStore.getRegisterValue(parseInt(instruction_data.value[6].replace('$R', '')));
           instruction_data.value[7] = parseInt(instruction_data.value[7].replace('$', ''));
           break;
@@ -182,6 +182,30 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
           instruction_data.value[10] = Math.trunc(Number(instruction_data.value[10]) / Number(instruction_data.value[11]));
           instruction_data.value[11] = 0;
           break;
+        case "AND": case "ANDI":
+          instruction_data.value[10] = Number(instruction_data.value[10]) & Number(instruction_data.value[11]);
+          instruction_data.value[11] = 0;
+          break;
+        case "NAND": case "NANDI":
+          instruction_data.value[10] = ~(Number(instruction_data.value[10]) & Number(instruction_data.value[11]));
+          instruction_data.value[11] = 0;
+          break;
+        case "OR": case "ORI":
+          instruction_data.value[10] = (Number(instruction_data.value[10]) | Number(instruction_data.value[11]));
+          instruction_data.value[11] = 0;
+          break;
+        case "NOR": case "NORI":
+          instruction_data.value[10] = ~(Number(instruction_data.value[10]) | Number(instruction_data.value[11]));
+          instruction_data.value[11] = 0;
+          break;
+        case "XOR": case "XORI":
+          instruction_data.value[10] = (Number(instruction_data.value[10]) ^ Number(instruction_data.value[11]));
+          instruction_data.value[11] = 0;
+          break;
+        case "XNOR": case "XNORI":
+          instruction_data.value[10] = ~(Number(instruction_data.value[10]) ^ Number(instruction_data.value[11]));
+          instruction_data.value[11] = 0;
+          break;
         case "BEQ":
           if(instruction_data.value[9] === instruction_data.value[10])
           {
@@ -212,14 +236,8 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
     {
       switch (instruction_data.value[8])
       {
-        case "ADD":
-        case "SUB":
-        case "MUL":
-        case "DIV":
-        case "ADDI":
-        case "SUBI":
-        case "MULI":
-        case "DIVI":
+        case "ADD": case "SUB": case "MUL": case "DIV": case "AND": case "OR": case "XOR": case "NAND": case "NOR": case "XNOR":
+        case "ADDI": case "SUBI": case "MULI": case "DIVI": case "ANDI": case "ORI": case "XORI": case "NANDI": case "NORI": case "XNORI":
           instruction_data.value[12] = instruction_data.value[8];
           instruction_data.value[13] = instruction_data.value[9];
           instruction_data.value[14] = instruction_data.value[10];
@@ -241,14 +259,8 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
     {
       switch (instruction_data.value[12])
       {
-        case "ADD":
-        case "SUB":
-        case "MUL":
-        case "DIV":
-        case "ADDI":
-        case "SUBI":
-        case "MULI":
-        case "DIVI":
+        case "ADD": case "SUB": case "MUL": case "DIV": case "AND": case "OR": case "XOR": case "NAND": case "NOR": case "XNOR":
+        case "ADDI": case "SUBI": case "MULI": case "DIVI": case "ANDI": case "ORI": case "XORI": case "NANDI": case "NORI": case "XNORI":
           instruction_data.value[13] = parseInt(instruction_data.value[13].replace('$R', ''));
           mipsStore.setRegisterValue(instruction_data.value[13],instruction_data.value[14])
           break;
