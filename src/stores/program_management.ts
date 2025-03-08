@@ -1,8 +1,10 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useMipsStore } from "./mipsStore";
+import {useQuasar} from "quasar";
 
 export const useProgramManagementStore = defineStore("programManagement", () => {
+  const $q = useQuasar();
   const fetchPhase = ref("");
   const decodePhase = ref("");
   const executePhase = ref("");
@@ -87,7 +89,8 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
     {
       case "ADD": case "SUB": case "MUL": case "DIV": case "AND": case "OR": case "XOR": case "NAND": case "NOR": case "XNOR":
       case "ADDI": case "SUBI": case "MULI": case "DIVI": case "ANDI": case "ORI": case "XORI": case "NANDI": case "NORI": case "XNORI":
-      if (
+      case "SLLV": case "SLLVI": case "SRLV": case "SRLVI": case "MULU": case "DIVU":
+      if(
         parts.length === 4 &&
         parts[1] !== undefined && ValidRegister(parts[1]) &&
         parts[2] !== undefined && ValidRegister(parts[2]) &&
@@ -98,6 +101,7 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
         instruction_data.value[0] = "NOP";
       }
       break;
+
       case "BEQ": case "BNEQ":
       if (parts.length === 4 && parts[1] !== undefined && ValidRegister(parts[1]) && parts[2] !== undefined
         && ValidRegister(parts[2]) && parts[3] !== undefined && ValidInstructionNumber(parts[3]))
@@ -113,6 +117,59 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
         instruction_data.value[0] = "NOP";
       }
       break;
+
+      case "L": case "LI": case "LU": case "LUI":
+      if (
+        parts.length === 3 &&
+        parts[1] !== undefined && ValidRegister(parts[1]) &&
+        parts[2] !== undefined && (instruction.endsWith("I") ? ValidNumber(parts[2]) : ValidRegister(parts[2]))
+      ) {[instruction_data.value[0], instruction_data.value[1], instruction_data.value[2]] = parts;
+        instruction_data.value[3] = 0}
+      else {
+        console.log("Invalid " + (parts.length !== 3 ? "Syntax" : "Registers") + " - Replaced for NOP");
+        instruction_data.value[0] = "NOP";
+      }
+      break;
+
+      case "J":
+        if (parts.length === 2 && parts[1] !== undefined && ValidInstructionNumber(parts[1])) {
+          [instruction_data.value[0], instruction_data.value[1]] = parts;
+        } else {
+          console.log(
+            "Invalid " +
+            (parts.length !== 2 ? "Syntax" :
+              (parts[1] === undefined || !ValidInstructionNumber(parts[1]) ? "Instruction Number" : "")) +
+            " - Replaced for NOP"
+          );
+          instruction_data.value[0] = "NOP";
+        }
+        break;
+
+      case "LW": case "SW": case "LWI": case "SWI":
+      if (
+        parts.length === 4 &&
+        parts[1] !== undefined && ValidRegister(parts[1]) &&
+        parts[2] !== undefined && (instruction.endsWith("I") ? ValidNumber(parts[2]) : ValidRegister(parts[2])) &&
+        parts[3] !== undefined && ValidData(parts[3])
+      ) {[instruction_data.value[0], instruction_data.value[1], instruction_data.value[2], instruction_data.value[3]] = parts;}
+      else {
+        console.log("Invalid " + (parts.length !== 4 ? "Syntax" : "Registers/Data") + " - Replaced for NOP");
+        instruction_data.value[0] = "NOP";
+      }
+      break;
+
+      case "Q":
+        pause()
+        mipsStore.quitProgress();
+
+        $q.notify({
+          message: 'Simulation Ended!',
+          color: 'primary',
+          position: 'bottom',
+          timeout: 3000
+        });
+
+        break;
 
       default:
         console.log("Unknown Instruction - Replaced for NOP");
@@ -138,16 +195,44 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
       switch (instruction_data.value[4])
       {
         case "ADD": case "SUB": case "MUL": case "DIV": case "AND": case "OR": case "XOR": case "NAND": case "NOR": case "XNOR":
+        case "SLLV": case "SRLV": case "MULU": case "DIVU":
           instruction_data.value[6] = mipsStore.getRegisterValue(parseInt(instruction_data.value[6].replace('$R', '')));
           instruction_data.value[7] = mipsStore.getRegisterValue(parseInt(instruction_data.value[7].replace('$R', '')));
           break;
-        case "ADDI": case "SUBI": case "MULI": case "DIVI": case "ANDI": case "ORI": case "XORI": case "NANDI": case "NORI": case "XNORI":
+        case "ADDI": case "SUBI": case "MULI": case "DIVI": case "ANDI": case "ORI": case "XORI": case "NANDI": case "NORI": case "XNORI": case "SLLVI": case "SRLVI":
           instruction_data.value[6] = mipsStore.getRegisterValue(parseInt(instruction_data.value[6].replace('$R', '')));
           instruction_data.value[7] = parseInt(instruction_data.value[7].replace('$', ''));
           break;
         case "BEQ": case "BNEQ":
           instruction_data.value[5] = mipsStore.getRegisterValue(parseInt(instruction_data.value[5].replace('$R', '')));
           instruction_data.value[6] = mipsStore.getRegisterValue(parseInt(instruction_data.value[6].replace('$R', '')));
+          break;
+        case "L": case "LU":
+          instruction_data.value[6] = mipsStore.getRegisterValue(parseInt(instruction_data.value[6].replace('$R', '')));
+          break;
+        case "LI": case "LUI":
+          instruction_data.value[6] = parseInt(instruction_data.value[6].replace('$', ''));
+          break;
+        case "LW":
+          instruction_data.value[6] = mipsStore.getRegisterValue(parseInt(instruction_data.value[6].replace('$R', '')));
+          instruction_data.value[7] = parseInt(instruction_data.value[7].replace('$', ''));
+          break;
+        case "LWI":
+          instruction_data.value[6] = parseInt(instruction_data.value[6].replace('$', ''));
+          instruction_data.value[7] = parseInt(instruction_data.value[7].replace('$', ''));
+          break;
+        case "SW":
+          instruction_data.value[5] = mipsStore.getRegisterValue(parseInt(instruction_data.value[5].replace('$R', '')));
+          instruction_data.value[6] = mipsStore.getRegisterValue(parseInt(instruction_data.value[6].replace('$R', '')));
+          instruction_data.value[7] = parseInt(instruction_data.value[7].replace('$', ''));
+          break;
+        case "SWI":
+          instruction_data.value[5] = mipsStore.getRegisterValue(parseInt(instruction_data.value[5].replace('$R', '')));
+          instruction_data.value[6] = parseInt(instruction_data.value[6].replace('$', ''));
+          instruction_data.value[7] = parseInt(instruction_data.value[7].replace('$', ''));
+          break;
+        case "J":
+          break;
       }
     }
   }
@@ -171,7 +256,7 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
           instruction_data.value[11] = 0;
           break;
         case "SUB": case "SUBI":
-          instruction_data.value[10] = instruction_data.value[10] - instruction_data.value[11];
+          instruction_data.value[10] = Number(instruction_data.value[10]) - Number(instruction_data.value[11]);
           instruction_data.value[11] = 0;
           break;
         case "MUL": case "MULI":
@@ -182,45 +267,84 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
           instruction_data.value[10] = Math.trunc(Number(instruction_data.value[10]) / Number(instruction_data.value[11]));
           instruction_data.value[11] = 0;
           break;
+        case "MULU":
+          instruction_data.value[10] = (Number(instruction_data.value[10]) >>> 0) * (Number(instruction_data.value[11]) >>> 0) >>> 0;
+          instruction_data.value[11] = 0;
+          break;
+        case "DIVU":
+          instruction_data.value[10] = Math.trunc((Number(instruction_data.value[10]) >>> 0) / (Number(instruction_data.value[11]) >>> 0));
+          instruction_data.value[11] = 0;
+          break;
         case "AND": case "ANDI":
-          instruction_data.value[10] = Number(instruction_data.value[10]) & Number(instruction_data.value[11]);
+          instruction_data.value[10] = BigInt(instruction_data.value[10]) & BigInt(instruction_data.value[11]);
           instruction_data.value[11] = 0;
           break;
         case "NAND": case "NANDI":
-          instruction_data.value[10] = ~(Number(instruction_data.value[10]) & Number(instruction_data.value[11]));
+          instruction_data.value[10] = ~(BigInt(instruction_data.value[10]) & BigInt(instruction_data.value[11]));
           instruction_data.value[11] = 0;
           break;
         case "OR": case "ORI":
-          instruction_data.value[10] = (Number(instruction_data.value[10]) | Number(instruction_data.value[11]));
+          instruction_data.value[10] = (BigInt(instruction_data.value[10]) | BigInt(instruction_data.value[11]));
           instruction_data.value[11] = 0;
           break;
         case "NOR": case "NORI":
-          instruction_data.value[10] = ~(Number(instruction_data.value[10]) | Number(instruction_data.value[11]));
+          instruction_data.value[10] = ~(BigInt(instruction_data.value[10]) | BigInt(instruction_data.value[11]));
           instruction_data.value[11] = 0;
           break;
         case "XOR": case "XORI":
-          instruction_data.value[10] = (Number(instruction_data.value[10]) ^ Number(instruction_data.value[11]));
+          instruction_data.value[10] = (BigInt(instruction_data.value[10]) ^ BigInt(instruction_data.value[11]));
           instruction_data.value[11] = 0;
           break;
         case "XNOR": case "XNORI":
-          instruction_data.value[10] = ~(Number(instruction_data.value[10]) ^ Number(instruction_data.value[11]));
+          instruction_data.value[10] = ~(BigInt(instruction_data.value[10]) ^ BigInt(instruction_data.value[11]));
           instruction_data.value[11] = 0;
+          break;
+        case "SLLV": case "SLLVI":
+          instruction_data.value[10] = (BigInt(instruction_data.value[10]) << BigInt(instruction_data.value[11])).toString();
+          instruction_data.value[11] = "0";
+          break;
+        case "SRLV": case "SRLVI":
+          instruction_data.value[10] = (BigInt(instruction_data.value[10]) >> BigInt(instruction_data.value[11])).toString();
+          instruction_data.value[11] = "0";
+          break;
+        case "LU": case "LUI":
+          instruction_data.value[10] = (BigInt(instruction_data.value[10]) & BigInt(0xFFFF0000) | (BigInt(instruction_data.value[11]) << BigInt(16))).toString();
+          instruction_data.value[11] = "0";
           break;
         case "BEQ":
           if(instruction_data.value[9] === instruction_data.value[10])
-          {
-            mipsStore.setPC(parseInt(instruction_data.value[11].replace('$', '')))
-          }
+          {mipsStore.setPC(parseInt(instruction_data.value[11].replace('$', '')))}
           instruction_data.value[8] = "NOP"
           break;
         case "BNEQ":
           if(instruction_data.value[9] !== instruction_data.value[10])
-          {
-            mipsStore.setPC(parseInt(instruction_data.value[11].replace('$', '')))
-          }
+          {mipsStore.setPC(parseInt(instruction_data.value[11].replace('$', '')))}
           instruction_data.value[8] = "NOP"
           break;
-
+        case "J":
+          mipsStore.setPC(parseInt(instruction_data.value[9].replace('$', '')))
+          instruction_data.value[8] = "NOP"
+          break;
+        case "LW": case "LWI":
+          instruction_data.value[10] = Number(instruction_data.value[10]) + Number(instruction_data.value[11]);
+          instruction_data.value[11] = 0;
+          if(0 <= instruction_data.value[10] && instruction_data.value[10] <= 499)
+          {
+            break;
+          }
+          console.log("Invalid memory space");
+          instruction_data.value[8] = "NOP"
+          break;
+        case "SW": case "SWI":
+          instruction_data.value[9] = Number(instruction_data.value[9])
+          instruction_data.value[10] = Number(instruction_data.value[10]) + Number(instruction_data.value[11]);
+          if(0 <= instruction_data.value[10] && instruction_data.value[10] <= 499)
+          {
+            break;
+          }
+          console.log("Invalid memory space");
+          instruction_data.value[8] = "NOP"
+          break;
 
       }
     }
@@ -238,12 +362,29 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
       {
         case "ADD": case "SUB": case "MUL": case "DIV": case "AND": case "OR": case "XOR": case "NAND": case "NOR": case "XNOR":
         case "ADDI": case "SUBI": case "MULI": case "DIVI": case "ANDI": case "ORI": case "XORI": case "NANDI": case "NORI": case "XNORI":
+        case "SLLV": case "SLLVI": case "SRLV": case "SRLVI": case "L": case "LI": case "LU": case "LUI": case "MULU": case "DIVU":
           instruction_data.value[12] = instruction_data.value[8];
           instruction_data.value[13] = instruction_data.value[9];
           instruction_data.value[14] = instruction_data.value[10];
           instruction_data.value[15] = instruction_data.value[11];
           break;
 
+        case "LW": case "LWI":
+          instruction_data.value[10] = mipsStore.getDataValue(instruction_data.value[10]);
+          instruction_data.value[12] = instruction_data.value[8];
+          instruction_data.value[13] = instruction_data.value[9];
+          instruction_data.value[14] = instruction_data.value[10];
+          instruction_data.value[15] = instruction_data.value[11];
+          break;
+
+        case "SW": case "SWI":
+          console.log(instruction_data.value[8],instruction_data.value[9],instruction_data.value[10],instruction_data.value[11]);
+          mipsStore.setDataValue(instruction_data.value[10],instruction_data.value[9]);
+          instruction_data.value[12] = "NOP";
+          instruction_data.value[13] = instruction_data.value[9];
+          instruction_data.value[14] = instruction_data.value[10];
+          instruction_data.value[15] = instruction_data.value[11];
+          break;
       }
     }
 
@@ -251,6 +392,18 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
   }
 
   function Write() {
+    if (mipsStore.getPC() > 304) {
+      pause();
+      mipsStore.quitProgress();
+
+      $q.notify({
+        message: 'Simulation Ended!',
+        color: 'primary',
+        position: 'bottom',
+        timeout: 3000
+      });
+    }
+
     if (instruction_data.value[12] == "NOP" || instruction_data.value[12] == "")
     {
       return;
@@ -261,6 +414,7 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
       {
         case "ADD": case "SUB": case "MUL": case "DIV": case "AND": case "OR": case "XOR": case "NAND": case "NOR": case "XNOR":
         case "ADDI": case "SUBI": case "MULI": case "DIVI": case "ANDI": case "ORI": case "XORI": case "NANDI": case "NORI": case "XNORI":
+        case "SLLV": case "SLLVI": case "SRLV": case "SRLVI": case "L": case "LI": case "LU": case "LUI": case "MULU": case "DIVU": case "LW": case "LWI":
           instruction_data.value[13] = parseInt(instruction_data.value[13].replace('$R', ''));
           mipsStore.setRegisterValue(instruction_data.value[13],instruction_data.value[14])
           break;
@@ -271,14 +425,18 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
   }
 
   function ValidRegister(register: string): boolean {
-    // Regular expression to match $R0 to $R31
     const registerRegex = /^\$R([0-9]|[1-2][0-9]|3[0-1])$/;
 
     return registerRegex.test(register);
   }
 
+  function ValidData(data: string): boolean {
+    const dataRegex = /^\$([0-9]|[1-9][0-9]|[1-4][0-9][0-9])$/;
+
+    return dataRegex.test(data);
+  }
+
   function ValidNumber(input: string): boolean {
-    // Regular expression to match numbers like $-45, $45, $+123
     const numberRegex = /^\$([+-]?\d+)$/;
 
     return numberRegex.test(input);

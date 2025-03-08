@@ -7,7 +7,7 @@ export const useMipsStore = defineStore('mipsStore', () => {
   // Arrays to store the instructions, registers, and data
   const instructions = ref(new Array(300).fill('NOP'));
   const registers = ref(new Array(32).fill(0));
-  const data = ref(new Array(300).fill(0));
+  const data = ref(new Array(500).fill(0));
 
   // Export JSON function
   const exportJson = () => {
@@ -74,6 +74,11 @@ export const useMipsStore = defineStore('mipsStore', () => {
     pc.value = 0;
   };
 
+  const quitProgress = () => {
+    programManagementStore.resetPipelinePhases();
+    pc.value = -1;
+  };
+
 
   //IIEMW Phase
   const programManagementStore = useProgramManagementStore();
@@ -96,12 +101,32 @@ export const useMipsStore = defineStore('mipsStore', () => {
     registers.value[registerIndex] = value;
   };
 
+  const getDataValue = (dataIndex: number) => {
+    if (dataIndex < 0 || dataIndex >= data.value.length) {
+      console.error("Invalid data index:", dataIndex);
+      return 0;
+    }
+    return data.value[dataIndex];
+  };
+
+  const setDataValue = (dataIndex: number, value: number) => {
+    if (dataIndex < 0 || dataIndex >= registers.value.length) {
+      console.error("Invalid data index:", dataIndex);
+      return;
+    }
+    data.value[dataIndex] = value;
+  };
+
   const setPC = (value: number) => {
     if (value < 0 || value >= instructions.value.length) {
       console.error("Invalid Instruction index:", value);
       return;
     }
     pc.value = value - 1;
+  };
+
+  const getPC = () => {
+    return pc.value;
   };
 
   return {
@@ -115,7 +140,11 @@ export const useMipsStore = defineStore('mipsStore', () => {
     getCurrentInstruction,
     getRegisterValue,
     setRegisterValue,
+    getDataValue,
+    setDataValue,
     setPC,
-    pc
+    getPC,
+    pc,
+    quitProgress,
   };
 });

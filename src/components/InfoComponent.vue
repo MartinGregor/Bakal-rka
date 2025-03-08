@@ -53,8 +53,10 @@ export default defineComponent({
   data() {
     return {
       instructions: [
-        ["LW", "Load Word", "LW $R1 offset($R2)", "This instruction loads a word from memory into a register."],
-        ["SW", "Store Word", "SW $R1 offset($R2)", "This instruction stores a word from a register into memory."],
+        ["LW", "Load Word", "LW $R1 $R2 $499", "This instruction loads a word from memory into a register."],
+        ["LWI", "Load Word Immediate", "LWI $R1 $0 $499", "This instruction loads a word from memory into a register."],
+        ["SW", "Store Word", "SW $R1 $R2 $499", "This instruction stores a word from a register into memory."],
+        ["SWI", "Store Word", "SWI $R1 $0 $499", "This instruction stores a word from a register into memory."],
         ["BEQ", "Branch if Equal", "BEQ $R1 $R2 $5", "This instruction branches if rs and rt are equal."],
         ["BNEQ", "Branch if Not Equal", "BNEQ $R1 $R2 $5", "This instruction branches if rs and rt are not equal."],
         ["ADD", "Addition", "ADD $R1 $R2 $R3", "This instruction adds the values in rs and rt and stores the result in rd."],
@@ -79,13 +81,16 @@ export default defineComponent({
         ["NORI", "Bitwise NOR Immediate", "NORI $R1 $R2 $5", "This instruction performs a bitwise NOR between rs and an immediate value and stores the result in rt."],
         ["XNOR", "Bitwise XNOR", "XNOR $R1 $R2 $R3", "This instruction performs a bitwise NOR between rs and rt and stores the result in rd."],
         ["XNORI", "Bitwise XNORI Immediate", "XNORI $R1 $R2 $5", "This instruction performs a bitwise NOR between rs and an immediate value and stores the result in rt."],
+        ["L", "Load", "LI $R1 $R2", "This instruction loads an immediate value into a register."],
+        ["LU", "Load Upper", "LI $R1 $R2", "This instruction loads an immediate value into the upper 16 bits of a register."],
         ["LI", "Load Immediate", "LI $R1 5", "This instruction loads an immediate value into a register."],
-        ["LUI", "Load Upper Immediate", "LI $R1 aa11", "This instruction loads an immediate value into the upper 16 bits of a register."],
+        ["LUI", "Load Upper Immediate", "LI $R1 5", "This instruction loads an immediate value into the upper 16 bits of a register."],
         ["NOP", "No Operation", "NOP", "This instruction does nothing and is used as a placeholder."],
         ["SLLV", "Shift Left Logical Variable", "SLLV $R1 $R2 $R3", "This instruction shifts the value in rt left by the amount specified in rs and stores the result in rd."],
         ["SRLV", "Shift Right Logical Variable", "SRLV $R1 $R2 $R3", "This instruction shifts the value in rt right by the amount specified in rs and stores the result in rd."],
+        ["SLLVI", "Shift Left Logical Variable Immediate", "SLLVI $R1 $R2 $5", "This instruction shifts the value in rt left by the amount specified in rs and stores the result in rd."],
+        ["SRLVI", "Shift Right Logical Variable Immediate", "SRLVI $R1 $R2 $5", "This instruction shifts the value in rt right by the amount specified in rs and stores the result in rd."],
         ["J", "JUMP", "J $rt", "This instruction jump on rt"],
-        ["JI", "JUMP Immediate", "JI 5 ", "This instruction jump on 5"],
         ["Q", "QUIT", "Q", "This instruction terminate the running program"]
       ],
       selectedInstructionIndex: 0,
