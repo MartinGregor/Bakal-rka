@@ -7,7 +7,7 @@
 
         <q-toolbar-title>
           <q-avatar>
-            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg">
+            <img src="https://cdn.quasar.dev/logo-v2/svg/logo-mono-white.svg" alt="">
           </q-avatar>
           MIPS Simulator
         </q-toolbar-title>
@@ -52,7 +52,7 @@
                  class="row items-center"
                  :style="{ marginBottom: space ? '5px' : '0px' }">
               <span class="q-mr-md" style="width: 10px; text-align: left;">{{ "R"+index }}</span>
-              <q-input filled v-model="registers[index]" dense class="col" />
+              <q-input filled v-model="registers[index]" :label="bin_hex(registers[index])" stack-label dense class="col" />
             </div>
           </div>
         </q-scroll-area>
@@ -61,7 +61,7 @@
         <q-separator class="q-my-md" />
 
         <q-banner class="bg-primary text-white" style="border-radius: 10px; margin-bottom: 5px; text-align: left; padding-left: 10px; text-align: center;">
-          <span class="text-h6">Data</span>
+          <span class="text-h6">Memory</span>
         </q-banner>
 
         <!-- Second scrollable area for data -->
@@ -71,7 +71,7 @@
                  class="row items-center"
                  :style="{ marginBottom: space ? '5px' : '0px' }">
               <span class="q-mr-md" style="width: 10px; text-align: left;">{{ ""+index }}</span>
-              <q-input filled v-model="data[index]" dense class="col" />
+              <q-input filled v-model="data[index]" :label="bin_hex(data[index])" dense class="col" />
             </div>
           </div>
         </q-scroll-area>
@@ -89,7 +89,7 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useMipsStore } from 'stores/mipsStore';
 
 export default {
@@ -114,6 +114,25 @@ export default {
       rightDrawerOpen.value = !rightDrawerOpen.value;
     };
 
+    const systemMode = computed(() => mipsStore.systemMode);
+
+    const bin_hex = (num: number | undefined | null): string => {
+      if (num === undefined || num === null) return "0";
+
+      switch (systemMode.value) {
+        case 'one':  // Binary (BIN)
+          return (num >>> 0).toString(2);
+        case 'two':  // Base 4 (QUAD)
+          return (num >>> 0).toString(4);
+        case 'three':  // Octal (OCT)
+          return (num >>> 0).toString(8);
+        case 'four':  // Hexadecimal (HEX)
+          return (num >>> 0).toString(16).toUpperCase();
+        default:
+          return num.toString();
+      }
+    };
+
     return {
       leftDrawerOpen,
       toggleLeftDrawer,
@@ -123,7 +142,9 @@ export default {
       visible,
       instructions,
       registers,
-      data
+      data,
+      bin_hex,
+      systemMode
     };
   }
 };

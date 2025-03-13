@@ -6,6 +6,8 @@
       <ImportExportComponent />
     </div>
     <IIEMWComponent />
+    <hr class="separator" />
+    <SchemeComponent />
   </div>
 </template>
 
@@ -15,6 +17,7 @@ import ImportExportComponent from 'components/ImportExportComponent.vue';
 import TimeComponent from 'components/TimeComponent.vue';
 import IIEMWComponent from "components/IIEMWComponent.vue";
 import InfoComponent from "components/InfoComponent.vue";
+import SchemeComponent from "components/SchemeComponent.vue";
 
 export default defineComponent({
   name: 'PanelComponent',
@@ -23,6 +26,7 @@ export default defineComponent({
     TimeComponent,
     IIEMWComponent,
     InfoComponent,
+    SchemeComponent,
   }
 });
 </script>
@@ -43,5 +47,11 @@ export default defineComponent({
   gap: 20px; /* Space between components */
   width: 100%;
   padding: 10px;
+}
+
+.separator {
+  margin: 16px 0;
+  border: none;
+  border-top: 2px solid #ccc;
 }
 </style>
