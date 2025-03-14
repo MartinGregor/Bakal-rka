@@ -9,7 +9,7 @@ export const useMipsStore = defineStore('mipsStore', () => {
   const registers = ref(new Array(32).fill(0));
   const data = ref(new Array(500).fill(0));
 
-  const systemMode = ref('one');
+  const systemMode = ref('bin');
 
   const setSystemMode = (mode: string) => {
     systemMode.value = mode;

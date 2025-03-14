@@ -120,13 +120,13 @@ export default {
       if (num === undefined || num === null) return "0";
 
       switch (systemMode.value) {
-        case 'one':  // Binary (BIN)
+        case 'bin':  // Binary (BIN)
           return (num >>> 0).toString(2);
-        case 'two':  // Base 4 (QUAD)
+        case 'quad':  // Base 4 (QUAD)
           return (num >>> 0).toString(4);
-        case 'three':  // Octal (OCT)
+        case 'oct':  // Octal (OCT)
           return (num >>> 0).toString(8);
-        case 'four':  // Hexadecimal (HEX)
+        case 'hex':  // Hexadecimal (HEX)
           return (num >>> 0).toString(16).toUpperCase();
         default:
           return num.toString();

@@ -48,10 +48,10 @@
               color="white"
               text-color="primary"
               :options="[
-              { label: 'BIN', value: 'one' },
-              { label: 'QUAD', value: 'two' },
-              { label: 'OCT', value: 'three' },
-              { label: 'HEX', value: 'four' }
+              { label: 'BIN', value: 'bin' },
+              { label: 'QUAD', value: 'quad' },
+              { label: 'OCT', value: 'oct' },
+              { label: 'HEX', value: 'hex' }
               ]"
               @update:model-value="setSystemMode"
             />
