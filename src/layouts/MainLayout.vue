@@ -18,7 +18,7 @@
 
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
       <div class="q-pa-md" style="display: flex; flex-direction: column; height: 100%;">
-        <q-banner class="bg-primary text-white" style="border-radius: 10px; margin-bottom: 5px; text-align: center;">
+        <q-banner class="bg-primary text-white" style="border-radius: 10px; margin-bottom: 10px; text-align: center; padding: 0; min-height: 40px;">
           <span class="text-h6">Instructions</span>
         </q-banner>
 
@@ -28,8 +28,18 @@
             <div v-for="(instruction, index) in instructions" :key="index"
                  class="row items-center"
                  :style="{ marginBottom: space ? '5px' : '0px' }">
-              <q-input filled :model-value="index" dense class="col-3" readonly bg-color="green"/>
-              <q-input filled v-model="instructions[index]" dense class="col-9" />
+              <q-input
+                :model-value="index"
+                dense
+                class="col-2"
+                disable
+                readonly
+                color="none"
+                text-color="white"
+                input-class="text-center"
+                bg-color="white"
+              />
+              <q-input filled v-model="instructions[index]" dense class="col-10"/>
             </div>
           </div>
         </q-scroll-area>
@@ -41,7 +51,7 @@
     <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
       <div class="q-pa-md" style="display: flex; flex-direction: column; height: 100%;">
 
-        <q-banner class="bg-primary text-white" style="border-radius: 10px; margin-bottom: 5px; text-align: center; padding-left: 10px;">
+        <q-banner class="bg-primary text-white" style="border-radius: 10px; margin-bottom: 10px; text-align: center; padding: 0; min-height: 40px;">
           <span class="text-h6">Registers</span>
         </q-banner>
 
@@ -51,7 +61,7 @@
             <div v-for="(register, index) in registers" :key="index"
                  class="row items-center"
                  :style="{ marginBottom: space ? '5px' : '0px' }">
-              <span class="q-mr-md" style="width: 10px; text-align: left;">{{ "R"+index }}</span>
+              <q-input :model-value="'R' + index" dense class="col-2" disable readonly color="none" text-color="white" input-class="text-center"/>
               <q-input filled v-model="registers[index]" :label="bin_hex(registers[index])" stack-label dense class="col" />
             </div>
           </div>
@@ -60,17 +70,29 @@
         <!-- Separator between the two scroll areas -->
         <q-separator class="q-my-md" />
 
-        <q-banner class="bg-primary text-white" style="border-radius: 10px; margin-bottom: 5px; text-align: left; padding-left: 10px; text-align: center;">
+        <q-banner class="bg-green text-white" style="border-radius: 10px; margin-bottom: 10px; text-align: center; padding: 0; min-height: 40px;">
           <span class="text-h6">Memory</span>
         </q-banner>
 
-        <!-- Second scrollable area for data -->
-        <q-scroll-area style="flex: 1; overflow: auto;">
+        <!-- Second scrollable area for memory -->
+        <q-scroll-area style="flex: 1; overflow: auto">
           <div class="column">
             <div v-for="(d, index) in data" :key="index"
                  class="row items-center"
                  :style="{ marginBottom: space ? '5px' : '0px' }">
-              <span class="q-mr-md" style="width: 10px; text-align: left;">{{ ""+index }}</span>
+              <q-input
+                :model-value="index"
+                dense
+                class="col-2 custom-input"
+                disable
+                readonly
+                color="none"
+                text-color="white"
+                input-class="text-center"
+                :label="mem_real(index)"
+                stack-label
+                label-class="text-right"
+              />
               <q-input filled v-model="data[index]" :label="bin_hex(data[index])" dense class="col" />
             </div>
           </div>
@@ -84,6 +106,7 @@
 
   </q-layout>
 </template>
+
 
 <script lang="ts">
 import { ref, computed } from 'vue';
@@ -125,9 +148,16 @@ export default {
           return (num >>> 0).toString(8);
         case 'hex':  // Hexadecimal (HEX)
           return (num >>> 0).toString(16).toUpperCase();
+        case '32':  // Hexadecimal (HEX)
+          return (num >>> 0).toString(32).toUpperCase();
         default:
           return num.toString();
       }
+    };
+
+    const mem_real = (num: number): string => {
+      const result = num * 4;
+      return result.toString(16).toUpperCase().padStart(4, '0');
     };
 
     return {
@@ -141,6 +171,7 @@ export default {
       registers,
       data,
       bin_hex,
+      mem_real,
       systemMode
     };
   }

@@ -9,15 +9,15 @@
       </q-btn>
 
       <!-- Export Button -->
-      <q-btn round color="white" text-color="blue" icon="file_download" @click="exportJson">
+      <q-btn round color="white" text-color="blue" icon="file_upload" @click="exportJson">
         <q-tooltip anchor="top middle" self="bottom middle" class="bg-primary text-body2 text-white" :offset="[10, 10]">
           Export
         </q-tooltip>
       </q-btn>
 
       <!-- Import Button (Triggers File Input) -->
-      <q-btn round color="white" text-color="green" icon="file_upload" @click="triggerFileInput">
-        <q-tooltip anchor="top middle" self="bottom middle" class="bg-primary text-body2 text-white" :offset="[10, 10]">
+      <q-btn round color="white" text-color="green" icon="file_download" @click="triggerFileInput">
+        <q-tooltip anchor="top middle" self="bottom middle" class="bg-green text-body2 text-white" :offset="[10, 10]">
           Import
         </q-tooltip>
       </q-btn>
@@ -46,6 +46,7 @@ export default defineComponent({
     // Trigger file input
     const triggerFileInput = () => {
       if (fileInput.value) {
+        fileInput.value.value = '';
         fileInput.value.click();
       }
     };

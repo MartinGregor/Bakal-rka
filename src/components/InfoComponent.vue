@@ -51,7 +51,8 @@
               { label: 'BIN', value: 'bin' },
               { label: 'QUAD', value: 'quad' },
               { label: 'OCT', value: 'oct' },
-              { label: 'HEX', value: 'hex' }
+              { label: 'HEX', value: 'hex' },
+              { label: '32', value: '32' }
               ]"
               @update:model-value="setSystemMode"
             />
@@ -59,10 +60,10 @@
         </q-popup-proxy>
       </q-btn>
 
-      <!-- Faculty Button -->
+      <!-- Development Button -->
       <q-btn round color="white" text-color="green" icon="school">
-        <q-tooltip anchor="top middle" self="bottom middle" class="bg-primary text-body2 text-white" :offset="[10, 10]">
-          Faculty
+        <q-tooltip anchor="top middle" self="bottom middle" class="bg-green text-body2 text-white" :offset="[10, 10]">
+          Development
         </q-tooltip>
       </q-btn>
     </div>

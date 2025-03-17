@@ -6,6 +6,12 @@
       </q-tooltip>
     </q-btn>
 
+    <q-btn round color="primary" text-color="white" icon="skip_next" @click="skipAndNotify">
+      <q-tooltip anchor="top middle" self="bottom middle" class="bg-primary text-body2 text-white" :offset="[10, 10]">
+        Skip
+      </q-tooltip>
+    </q-btn>
+
     <q-btn round color="primary" icon="play_arrow" @click="playAndNotify">
       <q-tooltip anchor="top middle" self="bottom middle" class="bg-primary text-body2 text-white" :offset="[10, 10]">
         Play
@@ -18,15 +24,9 @@
       </q-tooltip>
     </q-btn>
 
-    <q-btn round color="primary" text-color="white" icon="skip_next" @click="skipAndNotify">
-      <q-tooltip anchor="top middle" self="bottom middle" class="bg-primary text-body2 text-white" :offset="[10, 10]">
-        Skip
-      </q-tooltip>
-    </q-btn>
-
     <q-btn round color="primary" text-color="white" icon="speed" @click="instantAndNotify">
       <q-tooltip anchor="top middle" self="bottom middle" class="bg-primary text-body2 text-white" :offset="[10, 10]">
-        Instant
+        Fastest
       </q-tooltip>
     </q-btn>
 

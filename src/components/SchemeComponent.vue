@@ -1,11 +1,11 @@
 <template>
-  <div class="input-container">
+  <div>
 
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
 import { useProgramManagementStore } from "stores/program_management";
 
 export default defineComponent({
@@ -13,7 +13,14 @@ export default defineComponent({
 
   setup() {
     const store = useProgramManagementStore();
-    return { store, dense: false };
+    const splitterModel = ref(50);
+    const insideModel = ref(50);
+
+    return {
+      store,
+      splitterModel,
+      insideModel,
+    };
   },
 });
 </script>
