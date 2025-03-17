@@ -24,12 +24,12 @@
 
         <!-- Scrollable area for instructions -->
         <q-scroll-area style="flex: 1; overflow: auto;" class="custom-scroll" :visible="visible">
-          <div class="column" >
+          <div class="column">
             <div v-for="(instruction, index) in instructions" :key="index"
                  class="row items-center"
                  :style="{ marginBottom: space ? '5px' : '0px' }">
-              <span class="q-mr-md" style="width: 10px; text-align: right;">{{ index }}</span>
-              <q-input filled v-model="instructions[index]" dense class="col" />
+              <q-input filled :model-value="index" dense class="col-3" readonly bg-color="green"/>
+              <q-input filled v-model="instructions[index]" dense class="col-9" />
             </div>
           </div>
         </q-scroll-area>
@@ -75,11 +75,8 @@
             </div>
           </div>
         </q-scroll-area>
-
       </div>
     </q-drawer>
-
-
 
     <q-page-container>
       <router-view />
