@@ -8,14 +8,14 @@
         </q-tooltip>
         <q-popup-proxy>
           <div class="q-pa-md" style="width: 600px; height: 400px; display: flex;">
-            <div style="flex: 0.5; padding-right: 0; height: 100%; overflow-y: auto;">
+            <q-scroll-area style="flex: 0.5; padding-right: 0; height: 100%; overflow: auto;">
               <q-option-group
                 v-model="selectedInstructionIndex"
                 :options="instructionOptions"
                 color="primary"
                 right-label
               />
-            </div>
+            </q-scroll-area>
 
             <!-- Right Column for Description (Scrollable) -->
             <div v-if="selectedInstruction" style="flex: 2; padding-left: 10px; height: 100%; overflow-y: auto;">
@@ -30,22 +30,24 @@
       </q-btn>
 
       <!-- Settings Button -->
-      <q-btn round color="white" text-color="blue" icon="settings">
+      <q-btn round color="none" text-color="blue" icon="settings">
         <q-tooltip anchor="top middle" self="bottom middle" class="bg-primary text-body2 text-white" :offset="[10, 10]">
           Settings
         </q-tooltip>
         <q-popup-proxy>
-          <q-banner dense class="bg-white text-primary ">
-            Choose system:
+          <q-banner dense>
+            Choose system
+            <q-icon right name="settings" />
           </q-banner>
           <div>
             <q-btn-toggle
               v-model="model"
               class="my-custom-toggle"
               no-caps
+              rounded
               unelevated
               toggle-color="primary"
-              color="white"
+              color="none"
               text-color="primary"
               :options="[
               { label: 'BIN', value: 'bin' },
@@ -57,11 +59,50 @@
               @update:model-value="setSystemMode"
             />
           </div>
+
+          <q-banner dense>
+            Choose language
+            <q-icon right name="translate" />
+          </q-banner>
+          <div >
+            <q-btn-toggle
+              v-model="language"
+              class="my-custom-toggle"
+              no-caps
+              unelevated
+              rounded
+              toggle-color="primary"
+              color="none"
+              text-color="primary"
+              :options="[
+              { label: 'ENG', value: 'bin' },
+              { label: 'SK', value: 'quad' },
+              { label: 'GER', value: 'oct' },
+              { label: 'SPA', value: 'hex' },
+              { label: 'UK', value: '32' }
+              ]"
+            />
+          </div>
+
+          <q-item tag="label" v-ripple>
+            <q-item-section>
+              <q-item-label>{{ light ? 'Dark mode' : 'Light mode' }}</q-item-label>
+              <q-item-label caption>Switch between dark/light modes</q-item-label>
+            </q-item-section>
+            <q-item-section avatar>
+              <q-toggle
+                v-model="light"
+                @update:model-value="toggleDarkMode"
+                :icon="light ? 'brightness_2' : 'wb_sunny'"
+                size="md"
+              />
+            </q-item-section>
+          </q-item>
         </q-popup-proxy>
       </q-btn>
 
       <!-- Development Button -->
-      <q-btn round color="white" text-color="green" icon="school">
+      <q-btn round color="none" text-color="green" icon="school">
         <q-tooltip anchor="top middle" self="bottom middle" class="bg-green text-body2 text-white" :offset="[10, 10]">
           Development
         </q-tooltip>
@@ -71,18 +112,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useMipsStore } from 'stores/mipsStore';
+import { useQuasar} from "quasar";
 
 export default defineComponent({
   name: 'InfoComponent',
   data() {
 
     const mipsStore = useMipsStore();
+    const $q = useQuasar()
+    $q.dark.set(false)
 
     return {
       model: mipsStore.systemMode,
       setSystemMode: mipsStore.setSystemMode,
+
+      light: ref(false),
 
       instructions: [
         ["LW", "Load Word", "LW $Rx $Ry $i", "This instruction loads a word from memory into a Register", "LW $R1 $R2 $5", "Loads a word from memory (5 + R2) into Register R1"],
@@ -124,6 +170,7 @@ export default defineComponent({
         ["Q", "QUIT", "Q", "This instruction terminates the running program.", "Q", "Terminates the program"]
       ],
       selectedInstructionIndex: 0,
+      language: 'bin',
     };
   },
   computed: {
@@ -135,6 +182,22 @@ export default defineComponent({
     },
     selectedInstruction() {
       return this.instructions[this.selectedInstructionIndex];
+    }
+  },
+  methods: {
+    toggleDarkMode() {
+      const isDarkMode = this.$q.dark.isActive;
+      const newMode = !isDarkMode;
+
+      this.$q.dark.set(newMode);
+
+      this.$q.notify({
+        message: newMode ? 'Dark mode has been set!' : 'Light mode has been set!',
+        color: newMode ? 'none' : 'white',
+        textColor: newMode ? 'white' : 'black',
+        position: 'bottom',
+        timeout: 2000
+      });
     }
   }
 });

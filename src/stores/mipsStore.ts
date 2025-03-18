@@ -17,6 +17,12 @@ export const useMipsStore = defineStore('mipsStore', () => {
     systemMode.value = mode;
   };
 
+  const language = ref('eng');
+
+  const setLanguage = (mode: string) => {
+    language.value = mode;
+  };
+
   // Export JSON function
   const exportJson = () => {
     const jsonData = {
@@ -85,7 +91,7 @@ export const useMipsStore = defineStore('mipsStore', () => {
   const resetData = () => {
     instructions.value.splice(0, instructions.value.length, ...new Array(300).fill('NOP'));
     registers.value.splice(0, registers.value.length, ...new Array(32).fill(0));
-    data.value.splice(0, data.value.length, ...new Array(300).fill(0));
+    data.value.splice(0, data.value.length, ...new Array(500).fill(0));
 
     $q.notify({
       message: 'New Project!',
@@ -97,6 +103,30 @@ export const useMipsStore = defineStore('mipsStore', () => {
     programManagementStore.resetPipelinePhases();
 
     pc.value = 0;
+  };
+
+  const resetMemory = () => {
+    data.value.splice(0, data.value.length, ...new Array(500).fill(0));
+
+    $q.notify({
+      message: 'Memory Erased!',
+      color: 'green',
+      position: 'bottom',
+      timeout: 3000
+    });
+
+  };
+
+  const resetRegisters = () => {
+    registers.value.splice(0, registers.value.length, ...new Array(32).fill(0));
+
+    $q.notify({
+      message: 'Registers Erased!',
+      color: 'primary',
+      position: 'bottom',
+      timeout: 3000
+    });
+
   };
 
   const resetProgress = () => {
@@ -140,7 +170,7 @@ export const useMipsStore = defineStore('mipsStore', () => {
   };
 
   const setDataValue = (dataIndex: number, value: number) => {
-    if (dataIndex < 0 || dataIndex >= registers.value.length) {
+    if (dataIndex < 0 || dataIndex >= data.value.length) {
       console.error("Invalid data index:", dataIndex);
       return;
     }
@@ -177,6 +207,10 @@ export const useMipsStore = defineStore('mipsStore', () => {
     pc,
     quitProgress,
     systemMode,
+    setLanguage,
     setSystemMode,
+    resetRegisters,
+    resetMemory,
+
   };
 });

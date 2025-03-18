@@ -17,10 +17,12 @@
     </q-header>
 
     <q-drawer show-if-above v-model="leftDrawerOpen" side="left" bordered>
-      <div class="q-pa-md" style="display: flex; flex-direction: column; height: 100%;">
-        <q-banner class="bg-primary text-white" style="border-radius: 10px; margin-bottom: 10px; text-align: center; padding: 0; min-height: 40px;">
-          <span class="text-h6">Instructions</span>
-        </q-banner>
+      <div class="q-pa-md" style="display: flex; flex-direction: column; height: 100%; padding: 0">
+        <div class="row items-center no-wrap" style="padding: 5px;">
+          <q-banner class="bg-primary text-white col-grow" style="border-radius: 50px; text-align: center; padding: 0; min-height: 40px;">
+            <span class="text-h6">Instructions</span>
+          </q-banner>
+        </div>
 
         <!-- Scrollable area for instructions -->
         <q-scroll-area style="flex: 1; overflow: auto;" class="custom-scroll" :visible="visible">
@@ -37,7 +39,7 @@
                 color="none"
                 text-color="white"
                 input-class="text-center"
-                bg-color="white"
+                bg-color="none"
               />
               <q-input filled v-model="instructions[index]" dense class="col-10"/>
             </div>
@@ -49,11 +51,20 @@
 
 
     <q-drawer show-if-above v-model="rightDrawerOpen" side="right" bordered>
-      <div class="q-pa-md" style="display: flex; flex-direction: column; height: 100%;">
+      <div class="q-pa-md" style="display: flex; flex-direction: column; height: 100%; padding: 0">
 
-        <q-banner class="bg-primary text-white" style="border-radius: 10px; margin-bottom: 10px; text-align: center; padding: 0; min-height: 40px;">
-          <span class="text-h6">Registers</span>
-        </q-banner>
+
+          <div class="row items-center no-wrap" style="padding: 5px">
+            <q-btn round color="primary" text-color="white" icon="remove_circle_outline" class="q-mr-sm" @click="reset_registers">
+              <q-tooltip anchor="center start" self="center right" class="bg-primary text-body2 text-white" :offset="[10, 10]">
+                Erase Registers
+              </q-tooltip>
+            </q-btn>
+            <q-banner class="bg-primary text-white col-grow" style="border-radius: 50px; text-align: center; padding: 0; min-height: 40px;">
+              <span class="text-h6">Registers</span>
+            </q-banner>
+          </div>
+
 
         <!-- First scrollable area for registers -->
         <q-scroll-area style="flex: 1; overflow: auto;">
@@ -68,11 +79,18 @@
         </q-scroll-area>
 
         <!-- Separator between the two scroll areas -->
-        <q-separator class="q-my-md" />
+        <q-separator class="q-my-xs"/>
 
-        <q-banner class="bg-green text-white" style="border-radius: 10px; margin-bottom: 10px; text-align: center; padding: 0; min-height: 40px;">
-          <span class="text-h6">Memory</span>
-        </q-banner>
+        <div class="row items-center no-wrap" style="padding: 0 5px 5px;">
+          <q-btn round color="green" text-color="white" icon="remove_circle_outline" class="q-mr-sm" @click="reset_memory">
+            <q-tooltip anchor="center start" self="center right" class="bg-green text-body2 text-white" :offset="[10, 10]">
+              Erase Memory
+            </q-tooltip>
+          </q-btn>
+          <q-banner class="bg-green text-white col-grow" style="border-radius: 50px; text-align: center; padding: 0; min-height: 40px;">
+            <span class="text-h6">Memory</span>
+          </q-banner>
+        </div>
 
         <!-- Second scrollable area for memory -->
         <q-scroll-area style="flex: 1; overflow: auto">
@@ -160,6 +178,15 @@ export default {
       return result.toString(16).toUpperCase().padStart(4, '0');
     };
 
+    const reset_registers = () => {
+      mipsStore.resetRegisters();
+    };
+
+    const reset_memory = () => {
+      mipsStore.resetMemory();
+    };
+
+
     return {
       leftDrawerOpen,
       toggleLeftDrawer,
@@ -172,7 +199,9 @@ export default {
       data,
       bin_hex,
       mem_real,
-      systemMode
+      systemMode,
+      reset_registers,
+      reset_memory
     };
   }
 };

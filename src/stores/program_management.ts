@@ -173,6 +173,12 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
 
       default:
         console.log("Unknown Instruction - Replaced for NOP");
+        $q.notify({
+          message: 'Unknown Instruction! - replaced with NOP',
+          color: 'red',
+          position: 'bottom',
+          timeout: 3000
+        });
         instruction_data.value[0] = "NOP";
         break;
 
@@ -333,6 +339,12 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
             break;
           }
           console.log("Invalid memory space");
+          $q.notify({
+            message: 'Invalid memory space!',
+            color: 'red',
+            position: 'bottom',
+            timeout: 3000
+          });
           instruction_data.value[8] = "NOP"
           break;
         case "SW": case "SWI":
@@ -343,6 +355,12 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
             break;
           }
           console.log("Invalid memory space");
+          $q.notify({
+            message: 'Invalid memory space!',
+            color: 'red',
+            position: 'bottom',
+            timeout: 3000
+          });
           instruction_data.value[8] = "NOP"
           break;
 
@@ -378,7 +396,6 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
           break;
 
         case "SW": case "SWI":
-          console.log(instruction_data.value[8],instruction_data.value[9],instruction_data.value[10],instruction_data.value[11]);
           mipsStore.setDataValue(instruction_data.value[10],instruction_data.value[9]);
           instruction_data.value[12] = "NOP";
           instruction_data.value[13] = instruction_data.value[9];

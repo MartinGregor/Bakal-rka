@@ -30,7 +30,7 @@
       </q-tooltip>
     </q-btn>
 
-    <q-btn round color="white" text-color="green" icon="replay" @click="resetAndNotify">
+    <q-btn round color="none" text-color="green" icon="replay" @click="resetAndNotify">
       <q-tooltip anchor="top middle" self="bottom middle" class="bg-green text-body2 text-white" :offset="[10, 10]">
         Reset
       </q-tooltip>
@@ -81,10 +81,10 @@ export default defineComponent({
     const notifyReset = () => {
       $q.notify({
         message: 'Reset',
-        color: 'white',
+        color: 'green',
         position: 'bottom',
         timeout: 2000,
-        textColor: 'red',
+        textColor: 'green',
       });
     };
 
