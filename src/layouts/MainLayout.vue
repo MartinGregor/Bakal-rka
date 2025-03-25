@@ -37,6 +37,7 @@
                 disable
                 readonly
                 color="none"
+                :label="mem_real(index)"
                 text-color="white"
                 input-class="text-center"
                 bg-color="none"

@@ -84,7 +84,7 @@ export default defineComponent({
         color: 'green',
         position: 'bottom',
         timeout: 2000,
-        textColor: 'green',
+        textColor: 'none',
       });
     };
 

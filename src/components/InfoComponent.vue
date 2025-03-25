@@ -30,7 +30,7 @@
       </q-btn>
 
       <!-- Settings Button -->
-      <q-btn round color="none" text-color="blue" icon="settings">
+      <q-btn round color="none" text-color="primary" icon="settings">
         <q-tooltip anchor="top middle" self="bottom middle" class="bg-primary text-body2 text-white" :offset="[10, 10]">
           Settings
         </q-tooltip>

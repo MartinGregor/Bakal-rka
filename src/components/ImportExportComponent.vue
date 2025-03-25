@@ -9,7 +9,7 @@
       </q-btn>
 
       <!-- Export Button -->
-      <q-btn round color="none" text-color="blue" icon="file_upload" @click="exportJson">
+      <q-btn round color="none" text-color="primary" icon="file_upload" @click="exportJson">
         <q-tooltip anchor="top middle" self="bottom middle" class="bg-primary text-body2 text-white" :offset="[10, 10]">
           Export
         </q-tooltip>
