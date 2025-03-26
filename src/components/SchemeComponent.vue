@@ -1,6 +1,6 @@
 <template>
   <div>
-    <svg width="100%" height="650" viewBox="0 0 500 200">
+    <svg width="100%" height="410" viewBox="0 -18 500 250">
 
       <!--Lines-->
       <!--Part-1-->
@@ -153,7 +153,7 @@
       <text x="80" y="87" font-size="8" font-family="Arial" fill="grey" text-anchor="middle" >4</text>
 
       <!--Part-2-->
-      <rect x="225" y="23" width="10" height="25" fill="pink" rx="5" ry="5"/>
+      <rect x="225" y="23" width="10" height="25" fill="darkgrey" rx="5" ry="5"/>
       <rect x="170" y="20" width="20" height="40" fill="grey" rx="20" ry="20"/>
       <text x="180" y="40" font-size="8" font-family="Arial" fill="white" text-anchor="middle" >CU</text>
       <rect x="175" y="80" width="50" height="80" fill="grey" rx="5" ry="5"/>
@@ -163,24 +163,24 @@
 
 
       <!--Part-3-->
-      <rect x="330" y="28" width="10" height="25" fill="pink" rx="5" ry="5"/>
-      <rect x="257.5" y="182" width="10" height="25" fill="pink" rx="5" ry="5"/>
-      <rect x="280" y="125" width="10" height="25" fill="pink" rx="5" ry="5"/>
+      <rect x="330" y="28" width="10" height="25" fill="darkgrey" rx="5" ry="5"/>
+      <rect x="257.5" y="182" width="10" height="25" fill="darkgrey" rx="5" ry="5"/>
+      <rect x="280" y="125" width="10" height="25" fill="darkgrey" rx="5" ry="5"/>
       <polygon points="290,45 290,75 310,60" fill="#2196F3" stroke-linejoin="round" stroke="#2196F3" stroke-width="5"/>
       <text x="297" y="63.5" font-size="12" font-family="Arial" fill="white" text-anchor="middle">+</text>
-      <polygon points="305,100 305,140 335,120" fill="purple" stroke-linejoin="round" stroke="purple" stroke-width="5"/>
+      <polygon points="305,100 305,140 335,120" fill="lightgrey" stroke-linejoin="round" stroke="lightgrey" stroke-width="5"/>
       <text x="316" y="123" font-size="8" font-family="Arial" fill="white" text-anchor="middle">ALU</text>
       <text x="310" y="47" font-size="8" font-family="Arial" fill="grey" text-anchor="middle" >0</text>
 
       <!--Part-4-->
-      <rect x="400" y="-3" width="10" height="25" fill="pink" rx="5" ry="5"/>
+      <rect x="400" y="-3" width="10" height="25" fill="darkgrey" rx="5" ry="5"/>
       <rect x="375" y="100" width="50" height="40" fill="grey" rx="5" ry="5"/>
       <text x="400" y="120" font-size="8" font-family="Helvetica" fill="white" text-anchor="middle">Memory</text>
-      <rect x="375" y="55" width="8" height="15" fill="pink" rx="2" ry="2"/>
+      <rect x="375" y="55" width="8" height="15" fill="darkgrey" rx="2" ry="2"/>
 
       <!--Part-5-->
 
-      <rect x="465" y="115" width="10" height="25" fill="pink" rx="5" ry="5"/>
+      <rect x="465" y="115" width="10" height="25" fill="darkgrey" rx="5" ry="5"/>
 
       <!--5rows-->
 
@@ -191,36 +191,31 @@
       <line x1="450" y1="20" x2="450" y2="200" stroke="#1976D2" stroke-width="10" stroke-linecap="round"/>
 
     </svg>
-    <button @click="changeColor" style="margin-top: 20px; padding: 10px; background-color: #1976D2; color: white; border: none; border-radius: 5px;">Change Color</button>
   </div>
 
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, computed } from "vue";
 import { useProgramManagementStore } from "stores/program_management";
 
 export default defineComponent({
   name: "IIEMWComponent",
 
+
   setup() {
     const store = useProgramManagementStore();
-    const pathColorDefault = ref("grey");
-    const pathColor1 = ref("Chartreuse");
-    const pathColor2 = ref("Magenta");
-    const pathColor3 = ref("Coral");
-    const pathColor4 = ref("Violet");
-    const pathColor5 = ref("Indigo");
+    const colors = store.colors
 
+    const pathColor1 = computed(() => colors[0]);
+    const pathColor2 = computed(() => colors[1]);
+    const pathColor3 = computed(() => colors[2]);
+    const pathColor4 = computed(() => colors[3]);
+    const pathColor5 = computed(() => colors[4]);
 
-    const changeColor = () => {
-      pathColor1.value = pathColor1.value === "#1976D2" ? "red" : "#1976D2";
-    };
 
     return {
       store,
-      changeColor,
-      pathColorDefault,
       pathColor1,
       pathColor2,
       pathColor3,

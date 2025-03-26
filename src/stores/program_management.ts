@@ -14,12 +14,19 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
 
   const mipsStore = useMipsStore();
 
+  const colors = ref(Array(5).fill("lightgrey"));
+  const colorList = ["#00264d", "#004c99", "#0073e6", "#3399ff", "#80c1ff"];
+  let step = 0;
+
   const resetPipelinePhases = () => {
     fetchPhase.value = "";
     decodePhase.value = "";
     executePhase.value = "";
     memoryAccessPhase.value = "";
     writeBackPhase.value = "";
+
+    step = 0;
+    colors.value.splice(0, colors.value.length, ...new Array(5).fill("lightgrey"));
 
     instruction_data.value.splice(0, instruction_data.value.length, ...new Array(20).fill(""));
   };
@@ -54,6 +61,8 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
     executePhase.value = decodePhase.value;
     decodePhase.value = fetchPhase.value;
     fetchPhase.value = mipsStore.getCurrentInstruction();
+
+    ChangeColor()
 
     if (fetchPhase.value !== "")
     {
@@ -466,6 +475,21 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
     return !isNaN(num) && num >= 0 && num <= 299;
   }
 
+  function ChangeColor() {
+    if (step < 5) {
+      // Gradually fill in colors from left to right
+      for (let i = step; i > 0; i--) {
+        colors.value[i] = colors.value[i - 1]; // Shift existing colors
+      }
+      colors.value[0] = colorList[step]; // Insert new color at the start
+      step++;
+    } else {
+      // Rotate colors when fully filled
+      const lastColor = colors.value.pop();
+      colors.value.unshift(lastColor);
+    }
+  }
+
   return {
     fetchPhase,
     decodePhase,
@@ -478,6 +502,7 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
     play,
     pause,
     playinstant,
-    playfast
+    playfast,
+    colors
   };
 });
