@@ -1,10 +1,20 @@
 <template>
   <div class="input-container">
-    <q-input outlined v-model="store.fetchPhase" :dense="dense" label="FETCH PHASE" readonly />
-    <q-input outlined v-model="store.decodePhase" :dense="dense" label="DECODE PHASE" readonly />
-    <q-input outlined v-model="store.executePhase" :dense="dense" label="EXECUTE PHASE" readonly />
-    <q-input outlined v-model="store.memoryAccessPhase" :dense="dense" label="MEMORY ACCESS PHASE" readonly />
-    <q-input outlined v-model="store.writeBackPhase" :dense="dense" label="WRITE BACK PHASE" readonly/>
+    <div class="input-wrapper" :style="{ borderBottom: `3px solid ${pathColor1}` }">
+      <q-input outlined v-model="store.fetchPhase" :dense="dense" label="FETCH PHASE" readonly/>
+    </div>
+    <div class="input-wrapper" :style="{ borderBottom: `3px solid ${pathColor2}` }">
+      <q-input outlined v-model="store.decodePhase" :dense="dense" label="DECODE PHASE" readonly/>
+    </div>
+    <div class="input-wrapper" :style="{ borderBottom: `3px solid ${pathColor3}` }">
+      <q-input outlined v-model="store.executePhase" :dense="dense" label="EXECUTE PHASE" readonly/>
+    </div>
+    <div class="input-wrapper" :style="{ borderBottom: `3px solid ${pathColor4}` }">
+      <q-input outlined v-model="store.memoryAccessPhase" :dense="dense" label="MEMORY ACCESS PHASE" readonly/>
+    </div>
+    <div class="input-wrapper" :style="{ borderBottom: `3px solid ${pathColor5}` }">
+      <q-input outlined v-model="store.writeBackPhase" :dense="dense" label="WRITE BACK PHASE" readonly/>
+    </div>
   </div>
 </template>
 
@@ -17,6 +27,7 @@ export default defineComponent({
 
   setup() {
     const store = useProgramManagementStore();
+    const colors = store.colors
 
     const pathColor1 = computed(() => colors[0]);
     const pathColor2 = computed(() => colors[1]);
@@ -40,6 +51,10 @@ export default defineComponent({
 <style scoped>
 .input-container {
   display: flex;
+  flex-direction: row; /* Change this from column to row */
   gap: 10px;
+}
+.input-wrapper {
+  padding-bottom: 3px;
 }
 </style>

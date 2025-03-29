@@ -327,12 +327,12 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
           instruction_data.value[11] = "0";
           break;
         case "BEQ":
-          if(instruction_data.value[9] === instruction_data.value[10])
+          if (String(instruction_data.value[9]) === String(instruction_data.value[10]))
           {mipsStore.setPC(parseInt(instruction_data.value[11].replace('$', '')))}
           instruction_data.value[8] = "NOP"
           break;
         case "BNEQ":
-          if(instruction_data.value[9] !== instruction_data.value[10])
+          if (String(instruction_data.value[9]) !== String(instruction_data.value[10]))
           {mipsStore.setPC(parseInt(instruction_data.value[11].replace('$', '')))}
           instruction_data.value[8] = "NOP"
           break;

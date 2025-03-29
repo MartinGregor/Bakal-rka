@@ -102,11 +102,77 @@
       </q-btn>
 
       <!-- Development Button -->
-      <q-btn round color="none" text-color="green" icon="school">
+      <q-btn round color="none" text-color="green" icon="school" @click="dialog = true">
         <q-tooltip anchor="top middle" self="bottom middle" class="bg-green text-body2 text-white" :offset="[10, 10]">
           Development
         </q-tooltip>
       </q-btn>
+
+      <q-dialog
+        v-model="dialog"
+        persistent
+        transition-show="slide-up"
+        transition-hide="slide-down"
+        :maximized="maximizedToggle">
+        <q-card class="bg-none text-white">
+          <q-bar>
+            <q-space />
+            <q-btn dense flat icon="minimize" @click="maximizedToggle = false" :disable="!maximizedToggle">
+              <q-tooltip v-if="maximizedToggle" class="bg-white text-primary">Minimize</q-tooltip>
+            </q-btn>
+            <q-btn dense flat icon="crop_square" @click="maximizedToggle = true" :disable="maximizedToggle">
+              <q-tooltip v-if="!maximizedToggle" class="bg-white text-primary">Maximize</q-tooltip>
+            </q-btn>
+            <q-btn dense flat icon="close" v-close-popup>
+              <q-tooltip class="bg-white text-primary">Close</q-tooltip>
+            </q-btn>
+          </q-bar>
+
+          <q-card class="bg-primary">
+            <q-card-section>
+              <div class="text-h5">Development</div>
+              <div class="text-subtitle1">
+                This project was created as part of my studies at FIIT STU in Slovakia.
+                It serves as an educational exercise and involves the implementation of MIPSim, along with various extensions and enhancements.
+                The project demonstrates understanding of computer architecture, assembly simulation, and system design.
+              </div>
+            </q-card-section>
+          </q-card>
+
+          <q-card class="bg-secondary">
+            <q-card-section>
+              <div class="text-h5">Video Tutorial</div>
+              <div class="text-subtitle1">
+                This tutorial will guide you through the key features and functionality step by step.
+              </div>
+
+              <div class="q-pa-md">
+                <video controls width="100%" style="border-radius: 25px; overflow: hidden" poster="../scheme/Poster.png">
+                  <source src="../scheme/Tutorial%20my%20version.mp4" type="video/mp4">
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+
+            </q-card-section>
+          </q-card>
+
+          <q-card class="bg-primary">
+            <q-card-section>
+              <div class="text-h5">Project</div>
+              <div class="text-subtitle1">This project was created using the Quasar/Vue framework and Pinia, with voiceover credits to Play.ht Studio and subtitle automation provided by Clipchamp.</div>
+
+              <div class="text-subtitle1">
+                Project was created by Martin Gregor as part of his Bachelor's thesis at FIIT STU in Slovakia,
+                under the supervision of Ing. Ján Hudec, PhD.
+              </div>
+            </q-card-section>
+          </q-card>
+
+          <q-card-actions align="right" class="bg-secondary">
+            <q-btn flat color="white" label="close" v-close-popup />
+          </q-card-actions>
+        </q-card>
+      </q-dialog>
     </div>
   </div>
 </template>
@@ -129,6 +195,8 @@ export default defineComponent({
       setSystemMode: mipsStore.setSystemMode,
 
       light: ref(false),
+      dialog: ref(false),
+      maximizedToggle: ref(false),
 
       instructions: [
         ["LW", "Load Word", "LW $Rx $Ry $i", "This instruction loads a word from memory into a Register", "LW $R1 $R2 $5", "Loads a word from memory (5 + R2) into Register R1"],
