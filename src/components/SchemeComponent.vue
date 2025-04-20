@@ -146,41 +146,44 @@
 
       <!--Objects-->
       <!--Part-1-->
-      <rect x="75" y="100" width="50" height="40" fill="grey" rx="5" ry="5"/>
+      <rect x="75" y="100" width="50" height="40" fill="grey" rx="5" ry="5" stroke="black" stroke-width="1"/>
       <text x="100" y="120" font-size="8" font-family="Helvetica" fill="white" text-anchor="middle">Instructions</text>
-      <polygon points="100,60 100,90 120,75" fill="#2196F3" stroke-linejoin="round" stroke="#2196F3" stroke-width="5"/>
+
+      <polygon points="100,60 100,90 120,75" fill="#2196F3" stroke-linejoin="round" stroke="black" stroke-width="1"/>
+
+<!--      <polygon points="100,60 100,90 120,75" fill="#2196F3" stroke-linejoin="round" stroke="#2196F3" stroke-width="5"/>-->
       <text x="107.5" y="79.5" font-size="12" font-family="Arial" fill="white" text-anchor="middle">+</text>
       <text x="80" y="87" font-size="8" font-family="Arial" fill="grey" text-anchor="middle" >4</text>
 
       <!--Part-2-->
-      <rect x="225" y="23" width="10" height="25" fill="darkgrey" rx="5" ry="5"/>
-      <rect x="170" y="20" width="20" height="40" fill="grey" rx="20" ry="20"/>
+      <rect x="225" y="23" width="10" height="25" fill="darkgrey" rx="5" ry="5" stroke="black" stroke-width="1"/>
+      <rect x="170" y="20" width="20" height="40" fill="grey" rx="20" ry="20" stroke="black" stroke-width="1"/>
       <text x="180" y="40" font-size="8" font-family="Arial" fill="white" text-anchor="middle" >CU</text>
-      <rect x="175" y="80" width="50" height="80" fill="grey" rx="5" ry="5"/>
+      <rect x="175" y="80" width="50" height="80" fill="grey" rx="5" ry="5" stroke="black" stroke-width="1"/>
       <text x="200" y="120" font-size="8" font-family="Helvetica" fill="white" text-anchor="middle">Registers</text>
       <text x="210" y="32" font-size="8" font-family="Arial" fill="grey" text-anchor="middle" >0</text>
-      <rect x="230" y="165" width="10" height="20" fill="grey" rx="20" ry="20"/>
+      <rect x="230" y="165" width="10" height="20" fill="grey" rx="20" ry="20" stroke="black" stroke-width="1"/>
 
 
       <!--Part-3-->
-      <rect x="330" y="28" width="10" height="25" fill="darkgrey" rx="5" ry="5"/>
-      <rect x="257.5" y="182" width="10" height="25" fill="darkgrey" rx="5" ry="5"/>
-      <rect x="280" y="125" width="10" height="25" fill="darkgrey" rx="5" ry="5"/>
-      <polygon points="290,45 290,75 310,60" fill="#2196F3" stroke-linejoin="round" stroke="#2196F3" stroke-width="5"/>
+      <rect x="330" y="28" width="10" height="25" fill="darkgrey" rx="5" ry="5" stroke="black" stroke-width="1"/>
+      <rect x="257.5" y="182" width="10" height="25" fill="darkgrey" rx="5" ry="5" stroke="black" stroke-width="1"/>
+      <rect x="280" y="125" width="10" height="25" fill="darkgrey" rx="5" ry="5" stroke="black" stroke-width="1"/>
+      <polygon points="290,45 290,75 310,60" fill="#2196F3" stroke-linejoin="round" stroke="black" stroke-width="1"/>
       <text x="297" y="63.5" font-size="12" font-family="Arial" fill="white" text-anchor="middle">+</text>
-      <polygon points="305,100 305,140 335,120" fill="lightgrey" stroke-linejoin="round" stroke="lightgrey" stroke-width="5"/>
+      <polygon points="305,95 305,145 340,120" fill="lightgrey" stroke-linejoin="round" stroke="black" stroke-width="1"/>
       <text x="316" y="123" font-size="8" font-family="Arial" fill="white" text-anchor="middle">ALU</text>
       <text x="310" y="47" font-size="8" font-family="Arial" fill="grey" text-anchor="middle" >0</text>
 
       <!--Part-4-->
-      <rect x="400" y="-3" width="10" height="25" fill="darkgrey" rx="5" ry="5"/>
-      <rect x="375" y="100" width="50" height="40" fill="grey" rx="5" ry="5"/>
+      <rect x="400" y="-3" width="10" height="25" fill="darkgrey" rx="5" ry="5" stroke="black" stroke-width="1"/>
+      <rect x="375" y="100" width="50" height="40" fill="grey" rx="5" ry="5" stroke="black" stroke-width="1"/>
       <text x="400" y="120" font-size="8" font-family="Helvetica" fill="white" text-anchor="middle">Memory</text>
-      <rect x="375" y="55" width="8" height="15" fill="darkgrey" rx="2" ry="2"/>
+      <rect x="375" y="55" width="8" height="15" fill="darkgrey" rx="2" ry="2" stroke="black" stroke-width="1"/>
 
       <!--Part-5-->
 
-      <rect x="465" y="115" width="10" height="25" fill="darkgrey" rx="5" ry="5"/>
+      <rect x="465" y="115" width="10" height="25" fill="darkgrey" rx="5" ry="5" stroke="black" stroke-width="1"/>
 
       <!--5rows-->
 
