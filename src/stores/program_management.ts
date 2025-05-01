@@ -111,7 +111,7 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
       }
       break;
 
-      case "BEQ": case "BNEQ":
+      case "BEQ": case "BNEQ": case "BHI": case "BLO":
       if (parts.length === 4 && parts[1] !== undefined && ValidRegister(parts[1]) && parts[2] !== undefined
         && ValidRegister(parts[2]) && parts[3] !== undefined && ValidInstructionNumber(parts[3]))
       {[instruction_data.value[0], instruction_data.value[1], instruction_data.value[2], instruction_data.value[3]] = parts;}
@@ -218,7 +218,7 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
           instruction_data.value[6] = mipsStore.getRegisterValue(parseInt(instruction_data.value[6].replace('$R', '')));
           instruction_data.value[7] = parseInt(instruction_data.value[7].replace('$', ''));
           break;
-        case "BEQ": case "BNEQ":
+        case "BEQ": case "BNEQ": case "BHI": case "BLO":
           instruction_data.value[5] = mipsStore.getRegisterValue(parseInt(instruction_data.value[5].replace('$R', '')));
           instruction_data.value[6] = mipsStore.getRegisterValue(parseInt(instruction_data.value[6].replace('$R', '')));
           break;
@@ -292,26 +292,32 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
           break;
         case "AND": case "ANDI":
           instruction_data.value[10] = BigInt(instruction_data.value[10]) & BigInt(instruction_data.value[11]);
+          instruction_data.value[10] = Number(instruction_data.value[10])
           instruction_data.value[11] = 0;
           break;
         case "NAND": case "NANDI":
           instruction_data.value[10] = ~(BigInt(instruction_data.value[10]) & BigInt(instruction_data.value[11]));
+          instruction_data.value[10] = Number(instruction_data.value[10])
           instruction_data.value[11] = 0;
           break;
         case "OR": case "ORI":
           instruction_data.value[10] = (BigInt(instruction_data.value[10]) | BigInt(instruction_data.value[11]));
+          instruction_data.value[10] = Number(instruction_data.value[10])
           instruction_data.value[11] = 0;
           break;
         case "NOR": case "NORI":
           instruction_data.value[10] = ~(BigInt(instruction_data.value[10]) | BigInt(instruction_data.value[11]));
+          instruction_data.value[10] = Number(instruction_data.value[10])
           instruction_data.value[11] = 0;
           break;
         case "XOR": case "XORI":
           instruction_data.value[10] = (BigInt(instruction_data.value[10]) ^ BigInt(instruction_data.value[11]));
+          instruction_data.value[10] = Number(instruction_data.value[10])
           instruction_data.value[11] = 0;
           break;
         case "XNOR": case "XNORI":
           instruction_data.value[10] = ~(BigInt(instruction_data.value[10]) ^ BigInt(instruction_data.value[11]));
+          instruction_data.value[10] = Number(instruction_data.value[10])
           instruction_data.value[11] = 0;
           break;
         case "SLLV": case "SLLVI":
@@ -333,6 +339,16 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
           break;
         case "BNEQ":
           if (String(instruction_data.value[9]) !== String(instruction_data.value[10]))
+          {mipsStore.setPC(parseInt(instruction_data.value[11].replace('$', '')))}
+          instruction_data.value[8] = "NOP"
+          break;
+        case "BHI":
+          if (Number(instruction_data.value[9]) > Number(instruction_data.value[10]))
+          {mipsStore.setPC(parseInt(instruction_data.value[11].replace('$', '')))}
+          instruction_data.value[8] = "NOP"
+          break;
+        case "BLO":
+          if (Number(instruction_data.value[9]) < Number(instruction_data.value[10]))
           {mipsStore.setPC(parseInt(instruction_data.value[11].replace('$', '')))}
           instruction_data.value[8] = "NOP"
           break;

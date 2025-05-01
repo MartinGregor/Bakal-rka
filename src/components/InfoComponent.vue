@@ -141,14 +141,39 @@
 
           <q-card class="bg-secondary">
             <q-card-section>
+              <div class="text-h5">Manual</div>
+              <div class="text-subtitle1">
+                Choose language of manual:
+              </div>
+
+              <div class="row q-gutter-sm">
+                <q-btn
+                  color="primary"
+                  text-color="white"
+                  label="🇬🇧"
+                  @click="openPdf('eng')"
+                />
+                <q-btn
+                  color="primary"
+                  text-color="white"
+                  label="🇸🇰"
+                  @click="openPdf('sk')"
+                />
+              </div>
+
+            </q-card-section>
+          </q-card>
+
+          <q-card class="bg-primary">
+            <q-card-section>
               <div class="text-h5">Video Tutorial</div>
               <div class="text-subtitle1">
                 This tutorial will guide you through the key features and functionality step by step.
               </div>
 
               <div class="q-pa-md">
-                <video controls width="100%" style="border-radius: 25px; overflow: hidden" poster="../scheme/Poster.png">
-                  <source src="../scheme/Tutorial%20my%20version.mp4" type="video/mp4">
+                <video controls width="100%" style="border-radius: 25px; overflow: hidden" poster="/Video/Poster.png">
+                  <source src="/Video/Tutorial%20my%20version.mp4" type="video/mp4">
                   Your browser does not support the video tag.
                 </video>
               </div>
@@ -156,7 +181,7 @@
             </q-card-section>
           </q-card>
 
-          <q-card class="bg-primary">
+          <q-card class="bg-secondary">
             <q-card-section>
               <div class="text-h5">Project</div>
               <div class="text-subtitle1">This project was created using the Quasar/Vue framework and Pinia, with voiceover credits to Play.ht Studio and subtitle automation provided by Clipchamp.</div>
@@ -168,7 +193,7 @@
             </q-card-section>
           </q-card>
 
-          <q-card-actions align="right" class="bg-secondary">
+          <q-card-actions align="right" class="bg-primary">
             <q-btn flat color="white" label="close" v-close-popup />
           </q-card-actions>
         </q-card>
@@ -190,21 +215,36 @@ export default defineComponent({
     const $q = useQuasar()
     $q.dark.set(false)
 
+    const openPdf = (lang) => {
+      const urls = {
+        sk: '/Manual/ManualSK.pdf',
+        eng: '/Manual/ManualEN.pdf',
+      }
+
+      const pdfUrl = urls[lang]
+      if (pdfUrl) {
+        window.open(pdfUrl, '_blank')
+      }
+    }
+
     return {
       model: mipsStore.systemMode,
       setSystemMode: mipsStore.setSystemMode,
+      openPdf,
 
       light: ref(false),
       dialog: ref(false),
       maximizedToggle: ref(false),
 
       instructions: [
-        ["LW", "Load Word", "LW $Rx $Ry $i", "This instruction loads a word from memory into a Register", "LW $R1 $R2 $5", "Loads a word from memory (5 + R2) into Register R1"],
-        ["LWI", "Load Word Immediate", "LWI $Rx $Ry $memory", "This instruction loads a word from memory into a register", "LWI $R1 $5 $7", "Loads a word from memory (7 + 5) into Register R1"],
-        ["SW", "Store Word", "SW $Rx $Ry $i", "This instruction stores a word from a register into memory", "SW $R1 $R2 $5", "Stores the value from Register R1 into memory at (5 + R2)"],
-        ["SWI", "Store Word Immediate", "SWI $Rx $Ry $memory", "This instruction stores a word from a register into memory", "SWI $R1 $5 $7", "Stores the value from Register R1 into memory at (7 + 5)"],
+        ["LW", "Load Word", "LW $Rx $Ry $memory", "This instruction loads a word from memory into a Register", "LW $R1 $R2 $5", "Loads a word from memory (5 + R2) into Register R1"],
+        ["LWI", "Load Word Immediate", "LWI $Rx $i $memory", "This instruction loads a word from memory into a register", "LWI $R1 $5 $7", "Loads a word from memory (7 + 5) into Register R1"],
+        ["SW", "Store Word", "SW $Rx $Ry $memory", "This instruction stores a word from a register into memory", "SW $R1 $R2 $5", "Stores the value from Register R1 into memory at (5 + R2)"],
+        ["SWI", "Store Word Immediate", "SWI $Rx $i $memory", "This instruction stores a word from a register into memory", "SWI $R1 $5 $7", "Stores the value from Register R1 into memory at (7 + 5)"],
         ["BEQ", "Branch if Equal", "BEQ $Rx $Ry $instruction", "This instruction branches if the values in registers $R1 and $R2 are equal", "BEQ $R1 $R2 $5", "Branches if the values in R1 and R2 are equal on instruction 5"],
-        ["BNEQ", "Branch if Not Equal", "BNEQ $R1 $R2 $instruction", "This instruction branches if the values in registers $R1 and $R2 are not equal", "BNEQ $R1 $R2 $5", "Branches if the values in R1 and R2 are not equal on instruction 5"],
+        ["BNEQ", "Branch if Not Equal", "BNEQ $Rx $Ry $instruction", "This instruction branches if the values in registers $R1 and $R2 are not equal", "BNEQ $R1 $R2 $5", "Branches if the values in R1 and R2 are not equal on instruction 5"],
+        ["BHI", "Branch if Higher", "BHI $Rx $Ry $instruction", "This instruction branches if the value in register $R1 is higher than the value in register $R2.", "BHI $R1 $R2 $5", "Branches to instruction 5 if the value in R1 is higher than the value in R2."],
+        ["BLO", "Branch if Lower", "BLO $Rx $Ry $instruction", "This instruction branches if the value in register $R1 is lower than the value in register $R2.", "BLO $R1 $R2 $5", "Branches to instruction 5 if the value in R1 is lower than the value in R2."],
         ["ADD", "Addition", "ADD $Rx $Ry $Rz", "This instruction adds the values in two registers and stores the result in one", "ADD $R1 $R2 $R3", "Adds the values in R2 and R3, stores the result in R1"],
         ["ADDI", "Addition Immediate", "ADDI $Rx $Ry $i", "This instruction adds an immediate value to the value in register and stores the result in register", "ADDI $R1 $R2 $5", "Adds 5 to the value in R2, stores the result in R1"],
         ["SUB", "Subtraction", "SUB $Rx $Ry $Rz", "This instruction subtracts the values in two registers and stores the result in one", "SUB $R1 $R2 $R3", "Subtracts the value in R3 from the value in R2, stores the result in R1"],
