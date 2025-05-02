@@ -161,43 +161,43 @@
 
                 <q-btn round @click="openPdf('')">
                   <q-avatar size="42px">
-                    <img src="../assets/Flags/UK.png" alt="Slovak" />
+                    <img src="../assets/Flags/UK.png" alt="Ukraine" />
                   </q-avatar>
                 </q-btn>
 
                 <q-btn round @click="openPdf('')">
                   <q-avatar size="42px">
-                    <img src="../assets/Flags/GER.png" alt="Slovak" />
+                    <img src="../assets/Flags/GER.png" alt="German" />
                   </q-avatar>
                 </q-btn>
 
                 <q-btn round @click="openPdf('')">
                   <q-avatar size="42px">
-                    <img src="../assets/Flags/SPA.png" alt="Slovak" />
+                    <img src="../assets/Flags/SPA.png" alt="Spanish" />
                   </q-avatar>
                 </q-btn>
 
                 <q-btn round @click="openPdf('')">
                   <q-avatar size="42px">
-                    <img src="../assets/Flags/FRA.png" alt="Slovak" />
+                    <img src="../assets/Flags/FRA.png" alt="French" />
                   </q-avatar>
                 </q-btn>
 
                 <q-btn round @click="openPdf('')">
                   <q-avatar size="42px">
-                    <img src="../assets/Flags/ITA.png" alt="Slovak" />
+                    <img src="../assets/Flags/ITA.png" alt="Italian" />
                   </q-avatar>
                 </q-btn>
 
                 <q-btn round @click="openPdf('')">
                   <q-avatar size="42px">
-                    <img src="../assets/Flags/RUS.png" alt="Slovak" />
+                    <img src="../assets/Flags/RUS.png" alt="Russian" />
                   </q-avatar>
                 </q-btn>
 
                 <q-btn round @click="openPdf('')">
                   <q-avatar size="42px">
-                    <img src="../assets/Flags/POL.png" alt="Slovak" />
+                    <img src="../assets/Flags/POL.png" alt="Polish" />
                   </q-avatar>
                 </q-btn>
               </div>

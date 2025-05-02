@@ -107,6 +107,12 @@ export const useProgramManagementStore = defineStore("programManagement", () => 
       ) {[instruction_data.value[0], instruction_data.value[1], instruction_data.value[2], instruction_data.value[3]] = parts;}
       else {
         console.log("Invalid " + (parts.length !== 4 ? "Syntax" : "Registers") + " - Replaced for NOP");
+        $q.notify({
+          message: 'Unknown Instruction! - replaced with NOP',
+          color: 'red',
+          position: 'bottom',
+          timeout: 3000
+        });
         instruction_data.value[0] = "NOP";
       }
       break;
