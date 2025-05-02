@@ -147,18 +147,59 @@
               </div>
 
               <div class="row q-gutter-sm">
-                <q-btn
-                  color="primary"
-                  text-color="white"
-                  label="🇬🇧"
-                  @click="openPdf('eng')"
-                />
-                <q-btn
-                  color="primary"
-                  text-color="white"
-                  label="🇸🇰"
-                  @click="openPdf('sk')"
-                />
+                <q-btn round @click="openPdf('eng')">
+                  <q-avatar size="42px">
+                    <img src="../assets/Flags/GBR.png" alt="English" />
+                  </q-avatar>
+                </q-btn>
+
+                <q-btn round @click="openPdf('sk')">
+                  <q-avatar size="42px">
+                    <img src="../assets/Flags/SK.png" alt="Slovak" />
+                  </q-avatar>
+                </q-btn>
+
+                <q-btn round @click="openPdf('')">
+                  <q-avatar size="42px">
+                    <img src="../assets/Flags/UK.png" alt="Slovak" />
+                  </q-avatar>
+                </q-btn>
+
+                <q-btn round @click="openPdf('')">
+                  <q-avatar size="42px">
+                    <img src="../assets/Flags/GER.png" alt="Slovak" />
+                  </q-avatar>
+                </q-btn>
+
+                <q-btn round @click="openPdf('')">
+                  <q-avatar size="42px">
+                    <img src="../assets/Flags/SPA.png" alt="Slovak" />
+                  </q-avatar>
+                </q-btn>
+
+                <q-btn round @click="openPdf('')">
+                  <q-avatar size="42px">
+                    <img src="../assets/Flags/FRA.png" alt="Slovak" />
+                  </q-avatar>
+                </q-btn>
+
+                <q-btn round @click="openPdf('')">
+                  <q-avatar size="42px">
+                    <img src="../assets/Flags/ITA.png" alt="Slovak" />
+                  </q-avatar>
+                </q-btn>
+
+                <q-btn round @click="openPdf('')">
+                  <q-avatar size="42px">
+                    <img src="../assets/Flags/RUS.png" alt="Slovak" />
+                  </q-avatar>
+                </q-btn>
+
+                <q-btn round @click="openPdf('')">
+                  <q-avatar size="42px">
+                    <img src="../assets/Flags/POL.png" alt="Slovak" />
+                  </q-avatar>
+                </q-btn>
               </div>
 
             </q-card-section>
