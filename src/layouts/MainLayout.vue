@@ -157,7 +157,6 @@ export default {
 
     const bin_hex = (num: number | undefined | null): string => {
       if (num === undefined || num === null) return "0";
-
       switch (systemMode.value) {
         case 'bin':  // Binary (BIN)
           return (num >>> 0).toString(2);
