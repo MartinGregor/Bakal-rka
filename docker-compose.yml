@@ -1,0 +1,9 @@
+services:
+  mipsim:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:80"
+    container_name: mipsim-app
+    restart: unless-stopped
