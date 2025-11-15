@@ -8,6 +8,7 @@ WORKDIR /app
 COPY . .
 
 # Configure npm to handle SSL certificate issues in build environments
+# Note: In production environments with proper certificates, you can remove this line
 RUN npm config set strict-ssl false
 
 # Install all dependencies including devDependencies
