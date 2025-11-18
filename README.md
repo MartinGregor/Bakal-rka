@@ -40,7 +40,7 @@ This project includes Docker support for easy deployment using Node 20 and Quasa
 docker-compose up -d
 ```
 
-The application will be available at `http://localhost:8080`
+The application will be available at `http://localhost:8080` (locally) or `http://vsim.fiit.stuba.sk` (production)
 
 **Authentication Required:**
 - Username: `fiit`
