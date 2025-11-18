@@ -23,8 +23,11 @@ FROM nginx:stable-alpine AS production-stage
 # Copy built files from build stage
 COPY --from=build-stage /app/dist/spa /usr/share/nginx/html
 
-# Copy nginx configuration if needed (optional)
-# COPY nginx.conf /etc/nginx/nginx.conf
+# Copy nginx configuration for HTTP basic authentication
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy .htpasswd file for authentication
+COPY .htpasswd /etc/nginx/.htpasswd
 
 # Expose port 80
 EXPOSE 80
