@@ -42,6 +42,10 @@ docker-compose up -d
 
 The application will be available at `http://localhost:8080`
 
+**Authentication Required:**
+- Username: `fiit`
+- Password: `mips`
+
 ### Build Docker image manually
 ```bash
 docker build -t mipsim-app .
